@@ -68,3 +68,9 @@ $ mockgen -package=repository base-gin-golang/domain/repository ProductRepositor
 ```shell
 $ mockgen -package=helpdesk_contract base-gin-golang/usecase/helpdesk_contract HelpDeskContractUseCase > mock/usecase/helpdesk_contract/helpdesk_contract.go
 ```
+
+#Generate Html Swagger Docs
+
+```shell
+$ redoc-cli build api/docs/openapi.yaml
+```

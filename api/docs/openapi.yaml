@@ -1,0 +1,25 @@
+openapi: 3.0.3
+info:
+  title: Base Gin Golang swagger
+  description: A short description of API.
+  version: "1"
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Local Server
+
+paths:
+  /ping:
+    $ref: paths/ping.yaml
+
+  /products:
+    $ref: paths/product/index.yaml
+  /products/{id}:
+    $ref: paths/product/id/index.yaml
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

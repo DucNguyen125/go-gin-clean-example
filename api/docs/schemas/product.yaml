@@ -1,0 +1,16 @@
+detail:
+  type: object
+  description: product
+  properties:
+    id:
+      type: integer
+    productCode:
+      type: string
+    productName:
+      type: string
+    price:
+      type: integer
+    createdAt:
+      type: integer
+    updatedAt:
+      type: integer

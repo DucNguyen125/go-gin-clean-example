@@ -1,0 +1,18 @@
+get:
+  tags:
+    - "Product"
+  summary: "Get Detail Product"
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      description: Product Id
+      type: integer
+  responses:
+    "200":
+      description: "Success"
+      content:
+        application/json:
+          schema:
+            $ref: "../../../schemas/product.yaml#/detail"

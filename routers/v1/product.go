@@ -11,10 +11,10 @@ func initProductRouter(
 	r gin.IRouter,
 	productUseCase product.UseCase,
 ) {
-	r.POST("/", func(context *gin.Context) {
+	r.POST("", func(context *gin.Context) {
 		handler.CreateProduct(context, productUseCase)
 	})
-	r.GET("/", func(context *gin.Context) {
+	r.GET("", func(context *gin.Context) {
 		handler.GetListProduct(context, productUseCase)
 	})
 	r.GET("/:id", func(context *gin.Context) {

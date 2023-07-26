@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  swagger:
+    image: swaggerapi/swagger-editor
+    logging:
+      driver: none
+    volumes:
+      - ./docs:/docs
+    ports:
+      - 8080:8080
+    environment:
+      SWAGGER_FILE: /docs/openapi.yaml
+    restart: unless-stopped

@@ -1,0 +1,13 @@
+get:
+  tags:
+    - Ping
+  summary: Health Check
+  description: Health Check
+  responses:
+    200:
+      description: ok
+      content:
+        application/json:
+          schema:
+            type: string
+            example: pong

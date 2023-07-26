@@ -1,0 +1,21 @@
+post:
+  tags:
+    - "Product"
+  summary: "Create Product"
+  security:
+    - bearerAuth: []
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            productCode:
+              type: string
+            productName:
+              type: string
+            price:
+              type: integer
+  responses:
+    201:
+      description: "Success"
