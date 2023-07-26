@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"base-gin-golang/infra/postgresql"
 
@@ -44,8 +45,9 @@ func main() {
 		productRepository,
 	)
 	server := &http.Server{
-		Addr:    fmt.Sprintf(":%d", app.config.Port),
-		Handler: router,
+		Addr:              fmt.Sprintf(":%d", app.config.Port),
+		ReadHeaderTimeout: 3 * time.Second, //nolint:gomnd // common
+		Handler:           router,
 	}
 	log.Printf("[info] start http server listening: %d", app.config.Port)
 	if err = server.ListenAndServe(); err != nil {

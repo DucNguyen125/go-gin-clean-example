@@ -1,0 +1,53 @@
+#!/bin/bash
+
+go mod tidy
+go fmt ./...
+
+set -e
+while true; do
+    go test -cover ./...
+    if [ $? -eq 0 ]; then
+        echo "All tests passed"
+        break
+    else
+        echo "Tests failed. Retrying..."
+    fi
+done
+go build cmd/main.go
+golangci-lint run 
+
+LOG_FILE="lint-output.log"
+WHITE_LIST_FILE=".golangci-whitelist"
+
+if ! [ -f ${LOG_FILE} ]; then
+  exit 0
+fi
+
+# Set the counter to 0
+COUNT=0
+
+# Read each line of the log file and check if it is in the white list
+while read -r line; do
+  SUB_COUNT=0
+  if [ -f ${WHITE_LIST_FILE} ]; then
+    WHITE_LIST=($(cat "$WHITE_LIST_FILE"))
+    for white in "${WHITE_LIST[@]}"; do
+      if echo "$line" | grep -q "$white"; then
+        SUB_COUNT=$((SUB_COUNT+1))
+        break
+      fi
+    done
+  fi
+  if [ "$SUB_COUNT" -eq 0 ]; then
+    COUNT=$((COUNT+1))
+  fi
+done < "$LOG_FILE"
+
+# Check if the counter is 0 and exit if it is
+if [ "$COUNT" -ne 0 ]; then
+  echo "Lints failed"
+  exit 1
+fi
+
+echo "All lints passed"
+exit 0

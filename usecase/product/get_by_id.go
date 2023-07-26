@@ -6,12 +6,12 @@ import (
 	"base-gin-golang/domain/repository"
 )
 
-type GetProductByIdInput struct {
-	Id int64
+type GetProductByIDInput struct {
+	ID int64
 }
 
-func GetById(productRepository repository.ProductRepository, input *GetProductByIdInput) (*entity.Product, error) {
-	product, err := productRepository.GetById(input.Id)
+func GetByID(productRepository repository.ProductRepository, input *GetProductByIDInput) (*entity.Product, error) {
+	product, err := productRepository.GetByID(input.ID)
 	if err != nil {
 		return nil, err
 	}

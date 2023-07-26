@@ -3,7 +3,7 @@ package internal
 import "time"
 
 type Product struct {
-	Id          int       `gorm:"column:id;primaryKey;autoIncrement"`
+	ID          int       `gorm:"column:id;primaryKey;autoIncrement"`
 	ProductCode string    `gorm:"column:product_code"`
 	ProductName string    `gorm:"column:product_name"`
 	Price       int       `gorm:"column:price"`

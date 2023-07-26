@@ -2,3 +2,7 @@
 .env
 __debug_bin
 *.log
+.idea
+.docker
+test.db
+main

@@ -28,14 +28,14 @@ func CreateProduct(productRepository repository.ProductRepository) gin.HandlerFu
 
 func GetProduct(productRepository repository.ProductRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var input product.GetProductByIdInput
+		var input product.GetProductByIDInput
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		input.Id = id
-		output, err := product.GetById(productRepository, &input)
+		input.ID = id
+		output, err := product.GetByID(productRepository, &input)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, err.Error())
 			return
@@ -82,7 +82,7 @@ func UpdateProduct(productRepository repository.ProductRepository) gin.HandlerFu
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		input.Id = id
+		input.ID = id
 		output, err := product.Update(productRepository, &input)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, err.Error())
@@ -100,7 +100,7 @@ func DeleteProduct(productRepository repository.ProductRepository) gin.HandlerFu
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		input.Id = id
+		input.ID = id
 		output, err := product.Delete(productRepository, &input)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

@@ -5,7 +5,7 @@ import (
 )
 
 type DeleteProductInput struct {
-	Id int64
+	ID int64
 }
 
 type DeleteProductOutPut struct {
@@ -13,7 +13,7 @@ type DeleteProductOutPut struct {
 }
 
 func Delete(productRepository repository.ProductRepository, input *DeleteProductInput) (*DeleteProductOutPut, error) {
-	rowsAffected, err := productRepository.Delete(input.Id)
+	rowsAffected, err := productRepository.Delete(input.ID)
 	if err != nil {
 		return &DeleteProductOutPut{
 			RowsAffected: 0,

@@ -9,12 +9,15 @@ import (
 	"github.com/pkg/errors"
 	"gorm.io/driver/postgres"
 
+	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
 
 type Database struct {
 	*gorm.DB
 }
+
+var numberRetryConnect = 3
 
 func ConnectPostgresql(cfg *config.Environment) (*Database, error) {
 	var db *gorm.DB
@@ -31,9 +34,9 @@ func ConnectPostgresql(cfg *config.Environment) (*Database, error) {
 			Logger: newLogger(cfg),
 		})
 		if err != nil {
-			fmt.Printf("attempt connecting the database...(%d)\n", i+1)
+			log.Errorf("attempt connecting the database...(%d)\n", i+1)
 			// Retry connecting DB
-			time.Sleep(time.Second * time.Duration(math.Pow(3, float64(i))))
+			time.Sleep(time.Second * time.Duration(math.Pow(float64(numberRetryConnect), float64(i))))
 		}
 	}
 	if err != nil {
@@ -43,8 +46,6 @@ func ConnectPostgresql(cfg *config.Environment) (*Database, error) {
 }
 
 func (d Database) AutoMigrate() error {
-	if err := initDatabase(d.DB); err != nil {
-		return err
-	}
-	return nil
+	err := initDatabase(d.DB)
+	return err
 }

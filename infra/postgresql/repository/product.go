@@ -41,9 +41,9 @@ func (r *productRepository) GetList(input entity.GetListProductOption) ([]*entit
 	query := r.db.Model(&model.Product{})
 	if input.PageIndex > 0 {
 		offset := (input.PageIndex - 1) * input.PageSize
-		query = query.Offset(offset).Limit(int(input.PageSize))
+		query = query.Offset(offset).Limit(input.PageSize)
 	} else {
-		query = query.Limit(int(input.PageSize))
+		query = query.Limit(input.PageSize)
 	}
 	if input.Order != nil && *input.Order != "" {
 		query = query.Order(*input.Order)
@@ -55,7 +55,7 @@ func (r *productRepository) GetList(input entity.GetListProductOption) ([]*entit
 	return result, nil
 }
 
-func (r *productRepository) GetById(id int64) (*entity.Product, error) {
+func (r *productRepository) GetByID(id int64) (*entity.Product, error) {
 	result := &entity.Product{}
 	err := r.db.Model(&model.Product{}).Where("id = ?", id).First(&result).Error
 	if err != nil {
@@ -81,10 +81,10 @@ func (r *productRepository) Update(id int64, input *entity.Product) (*entity.Pro
 	return input, nil
 }
 
-func (r *productRepository) Delete(id int64) (rowsAffected int64, err error) {
+func (r *productRepository) Delete(id int64) (int64, error) {
 	result := r.db.Delete(&model.Product{}, id)
 	if result.Error != nil {
-		return
+		return 0, result.Error
 	}
 	return result.RowsAffected, nil
 }

@@ -9,7 +9,7 @@ import (
 )
 
 type UpdateProductInput struct {
-	Id          int64
+	ID          int64
 	ProductCode string `json:"productCode" binding:"required"`
 	ProductName string `json:"productName" binding:"required"`
 	Price       int    `json:"price" binding:"required"`
@@ -21,7 +21,7 @@ func Update(productRepository repository.ProductRepository, input *UpdateProduct
 	if err != nil {
 		return nil, err
 	}
-	newProduct, err := productRepository.Update(input.Id, data)
+	newProduct, err := productRepository.Update(input.ID, data)
 	if err != nil {
 		return nil, err
 	}
