@@ -13,6 +13,9 @@ func NewDataService() Service {
 }
 
 func (s *dataService) Copy(to interface{}, from interface{}) error {
-	err := copier.Copy(to, from)
+	err := copier.CopyWithOption(to, from, copier.Option{
+		IgnoreEmpty: true,
+		DeepCopy:    true,
+	})
 	return err
 }

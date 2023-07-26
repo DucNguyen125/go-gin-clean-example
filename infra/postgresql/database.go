@@ -32,12 +32,16 @@ func ConnectPostgresql(cfg *config.Environment) (*Database, error) {
 	for i := 0; i < 3; i++ {
 		db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
 			Logger: newLogger(cfg),
+			// QueryFields:                              true,
+			// DisableForeignKeyConstraintWhenMigrating: true,
 		})
 		if err != nil {
 			log.Errorf("attempt connecting the database...(%d)\n", i+1)
 			// Retry connecting DB
 			time.Sleep(time.Second * time.Duration(math.Pow(float64(numberRetryConnect), float64(i))))
+			continue
 		}
+		break
 	}
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf("error dsn: %q", dsn))

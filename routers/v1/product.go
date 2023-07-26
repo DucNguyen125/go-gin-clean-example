@@ -1,4 +1,4 @@
-package routers
+package v1
 
 import (
 	"base-gin-golang/handler"
@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func InitProductRouter(
+func initProductRouter(
 	r gin.IRouter,
 	productUseCase product.UseCase,
 ) {

@@ -24,7 +24,11 @@ type App struct {
 
 func main() {
 	cfg := loadEnvironment()
-	gin.SetMode(cfg.RunMode)
+	if cfg.DebugMode {
+		gin.SetMode("debug")
+	} else {
+		gin.SetMode("release")
+	}
 	// Init logger
 	logger.Init(cfg)
 	// Connect to database

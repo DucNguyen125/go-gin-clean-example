@@ -23,7 +23,7 @@ func TestCreateProduct(t *testing.T) {
 	mockDB.Migrator().DropTable(&model.Product{})
 	mockDB.AutoMigrate(&model.Product{})
 	productRepository := NewProductRepository(&postgresql.Database{DB: mockDB}, mockDataService)
-	mock1 := mockDataService.EXPECT().Copy(gomock.Any(), gomock.Any()).Return(errors.New("Copy failed"))
+	mockDataService.EXPECT().Copy(gomock.Any(), gomock.Any()).Return(errors.New("Copy failed"))
 	t.Run("Test copy fail", func(t *testing.T) {
 		_, err := productRepository.Create(&entity.Product{})
 		if err != nil && err.Error() != "Copy failed" {
@@ -37,17 +37,17 @@ func TestCreateProduct(t *testing.T) {
 	}
 	product := &model.Product{}
 	copier.Copy(product, input)
-	mock2 := mockDataService.EXPECT().Copy(gomock.Any(), gomock.Any()).Return(nil).SetArg(0, *product).After(mock1)
-	mock3 := mockDataService.EXPECT().Copy(gomock.Any(), gomock.Any()).Return(errors.New("Copy failed")).After(mock2)
+	mockDataService.EXPECT().Copy(gomock.Any(), gomock.Any()).Return(nil).SetArg(0, *product)
+	mockDataService.EXPECT().Copy(gomock.Any(), gomock.Any()).Return(errors.New("Copy failed"))
 	t.Run("Test copy fail", func(t *testing.T) {
 		_, err := productRepository.Create(&entity.Product{})
 		if err != nil && err.Error() != "Copy failed" {
 			t.Errorf("Test copy fail")
 		}
 	})
-	mock4 := mockDataService.EXPECT().Copy(gomock.Any(), gomock.Any()).Return(nil).SetArg(0, *product).After(mock3)
+	mockDataService.EXPECT().Copy(gomock.Any(), gomock.Any()).Return(nil).SetArg(0, *product)
 	product.ID = 1
-	mockDataService.EXPECT().Copy(gomock.Any(), gomock.Any()).Return(nil).SetArg(1, *product).After(mock4)
+	mockDataService.EXPECT().Copy(gomock.Any(), gomock.Any()).Return(nil).SetArg(1, *product)
 	t.Run("Test all", func(t *testing.T) {
 		_, err := productRepository.Create(&entity.Product{})
 		if err != nil {

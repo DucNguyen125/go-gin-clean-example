@@ -1,18 +1,11 @@
 package config
 
 import (
-	"errors"
-
 	env "github.com/Netflix/go-env"
 )
 
-var (
-	ErrInvalidEnv = errors.New("invalid env")
-)
-
 type Environment struct {
-	RunMode            string `env:"RUN_MODE,required=true"`
-	Port               int    `env:"PORT,required=true"`
+	Constants
 	CorsAllowOrigins   string `env:"CORS_ALLOW_ORIGINS,required=true"`
 	PostgresqlHost     string `env:"POSTGRESQL_HOST,required=true"`
 	PostgresqlPort     string `env:"POSTGRESQL_PORT,required=true"`

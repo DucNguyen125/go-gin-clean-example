@@ -8,6 +8,8 @@ import (
 	"strings"
 	"time"
 
+	v1Routers "base-gin-golang/routers/v1"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -39,9 +41,9 @@ func InitRouter(
 			"message": "pong",
 		})
 	})
-	apiRouter.Use()
-	{
-		InitProductRouter(apiRouter.Group("/products"), productUseCase)
-	}
+	v1Routers.InitV1Router(
+		apiRouter.Group("/v1"),
+		productUseCase,
+	)
 	return router
 }

@@ -22,7 +22,7 @@ type Logger struct {
 func newLogger(cfg *config.Environment) *Logger {
 	return &Logger{
 		SkipErrRecordNotFound: true,
-		Debug:                 cfg.RunMode == "debug",
+		Debug:                 cfg.DebugMode,
 	}
 }
 
@@ -54,12 +54,10 @@ func (l *Logger) Trace(ctx context.Context, begin time.Time, fc func() (string, 
 		log.WithContext(ctx).WithFields(fields).Errorf("%s [%s]", sql, elapsed)
 		return
 	}
-
 	if l.SlowThreshold != 0 && elapsed > l.SlowThreshold {
 		log.WithContext(ctx).WithFields(fields).Warnf("%s [%s]", sql, elapsed)
 		return
 	}
-
 	if l.Debug {
 		log.WithContext(ctx).WithFields(fields).Infof("%s [%s]", sql, elapsed)
 	}

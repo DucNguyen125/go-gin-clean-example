@@ -24,7 +24,7 @@ func Init(cfg *config.Environment) {
 	if err != nil {
 		log.Error(err)
 	}
-	if cfg.RunMode == "release" {
+	if cfg.ExportLog {
 		log.SetOutput(ioutil.Discard)
 		log.AddHook(&writer.Hook{
 			Writer: errorLogFile,
