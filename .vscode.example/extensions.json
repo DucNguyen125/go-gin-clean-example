@@ -1,0 +1,8 @@
+{
+	"recommendations": [
+		"sonarsource.sonarlint-vscode",
+		"streetsidesoftware.code-spell-checker",
+		"golang.go",
+		"editorconfig.editorconfig"
+	]
+}
