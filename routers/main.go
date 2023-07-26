@@ -2,8 +2,8 @@ package routers
 
 import (
 	"base-gin-golang/config"
-	"base-gin-golang/domain/repository"
 	"base-gin-golang/middlewares"
+	"base-gin-golang/usecase/product"
 	"net/http"
 	"strings"
 	"time"
@@ -14,7 +14,7 @@ import (
 
 func InitRouter(
 	config *config.Environment,
-	productRepository repository.ProductRepository,
+	productUseCase product.UseCase,
 ) *gin.Engine {
 	router := gin.New()
 	router.Use(cors.New(cors.Config{
@@ -41,7 +41,7 @@ func InitRouter(
 	})
 	apiRouter.Use()
 	{
-		InitProductRouter(apiRouter.Group("/products"), productRepository)
+		InitProductRouter(apiRouter.Group("/products"), productUseCase)
 	}
 	return router
 }

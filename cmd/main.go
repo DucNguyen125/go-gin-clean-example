@@ -2,15 +2,16 @@ package main
 
 import (
 	"base-gin-golang/config"
+	"base-gin-golang/infra/postgresql"
 	"base-gin-golang/infra/postgresql/repository"
+	dataPkg "base-gin-golang/pkg/data"
 	"base-gin-golang/pkg/logger"
 	"base-gin-golang/routers"
+	"base-gin-golang/usecase/product"
 	"fmt"
 	"log"
 	"net/http"
 	"time"
-
-	"base-gin-golang/infra/postgresql"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -39,10 +40,15 @@ func main() {
 	if err != nil {
 		log.Fatal("Error migrating database")
 	}
-	productRepository := repository.NewProductRepository(app.database)
+	// Service
+	dataService := dataPkg.NewDataService()
+	// Repository
+	productRepository := repository.NewProductRepository(app.database, dataService)
+	// UseCase
+	productUseCase := product.NewProductUseCase(productRepository, dataService)
 	router := routers.InitRouter(
 		app.config,
-		productRepository,
+		productUseCase,
 	)
 	server := &http.Server{
 		Addr:              fmt.Sprintf(":%d", app.config.Port),

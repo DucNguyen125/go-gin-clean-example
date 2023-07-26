@@ -6,30 +6,32 @@ import (
 	"base-gin-golang/infra/postgresql"
 	"base-gin-golang/infra/postgresql/model"
 
-	"github.com/jinzhu/copier"
+	dataPkg "base-gin-golang/pkg/data"
 )
 
 type productRepository struct {
-	db *postgresql.Database
+	db          *postgresql.Database
+	dataService dataPkg.Service
 }
 
-func NewProductRepository(db *postgresql.Database) repository.ProductRepository {
+func NewProductRepository(db *postgresql.Database, dataService dataPkg.Service) repository.ProductRepository {
 	return &productRepository{
-		db: db,
+		db:          db,
+		dataService: dataService,
 	}
 }
 
 func (r *productRepository) Create(input *entity.Product) (*entity.Product, error) {
 	product := &model.Product{}
-	err := copier.Copy(product, input)
+	err := r.dataService.Copy(product, input)
 	if err != nil {
 		return nil, err
 	}
 	result := r.db.Create(product)
 	if result.Error != nil {
-		return nil, err
+		return nil, result.Error
 	}
-	err = copier.Copy(input, product)
+	err = r.dataService.Copy(input, product)
 	if err != nil {
 		return nil, err
 	}
@@ -66,15 +68,15 @@ func (r *productRepository) GetByID(id int64) (*entity.Product, error) {
 
 func (r *productRepository) Update(id int64, input *entity.Product) (*entity.Product, error) {
 	product := &model.Product{}
-	err := copier.Copy(product, input)
+	err := r.dataService.Copy(product, input)
 	if err != nil {
 		return nil, err
 	}
 	result := r.db.Model(&model.Product{}).Where("id = ?", id).Updates(product)
 	if result.Error != nil {
-		return nil, err
+		return nil, result.Error
 	}
-	err = copier.Copy(input, product)
+	err = r.dataService.Copy(input, product)
 	if err != nil {
 		return nil, err
 	}

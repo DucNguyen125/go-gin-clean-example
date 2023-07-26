@@ -319,3 +319,4 @@ issues:
         - gosec
         - noctx
         - wrapcheck
+        - errcheck

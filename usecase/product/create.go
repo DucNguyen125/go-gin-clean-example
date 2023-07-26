@@ -2,10 +2,6 @@ package product
 
 import (
 	"base-gin-golang/domain/entity"
-
-	"base-gin-golang/domain/repository"
-
-	"github.com/jinzhu/copier"
 )
 
 type CreateProductInput struct {
@@ -14,13 +10,13 @@ type CreateProductInput struct {
 	Price       int    `json:"price" binding:"required"`
 }
 
-func Create(productRepository repository.ProductRepository, input *CreateProductInput) (*entity.Product, error) {
+func (pu *productUseCase) Create(input *CreateProductInput) (*entity.Product, error) {
 	data := &entity.Product{}
-	err := copier.Copy(data, input)
+	err := pu.dataService.Copy(data, input)
 	if err != nil {
 		return nil, err
 	}
-	newProduct, err := productRepository.Create(data)
+	newProduct, err := pu.productRepository.Create(data)
 	if err != nil {
 		return nil, err
 	}
