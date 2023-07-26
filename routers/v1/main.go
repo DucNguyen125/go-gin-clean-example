@@ -15,6 +15,6 @@ func InitV1Router(
 	r.Use()
 	{
 		initProductRouter(r.Group("/products"), productUseCase)
-		InitAuthRouter(r.Group("/auth"), authUseCase)
+		initAuthRouter(r.Group("/auth"), authUseCase)
 	}
 }

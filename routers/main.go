@@ -3,15 +3,13 @@ package routers
 import (
 	"base-gin-golang/config"
 	"base-gin-golang/middlewares"
+	v1Routers "base-gin-golang/routers/v1"
 	"base-gin-golang/usecase/auth"
 	"base-gin-golang/usecase/product"
+	"base-gin-golang/validations"
 	"net/http"
 	"strings"
 	"time"
-
-	v1Routers "base-gin-golang/routers/v1"
-
-	"base-gin-golang/validations"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"

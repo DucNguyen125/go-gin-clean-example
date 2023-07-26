@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func InitAuthRouter(
+func initAuthRouter(
 	r gin.IRouter,
 	authUseCase auth.UseCase,
 ) {
