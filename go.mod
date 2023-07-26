@@ -22,6 +22,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.2
+	github.com/sony/gobreaker v0.5.0
 	go.mongodb.org/mongo-driver v1.11.6
 	golang.org/x/crypto v0.9.0
 	gorm.io/driver/postgres v1.5.2

@@ -195,6 +195,15 @@ linters-settings:
     # Default: true
     asserts: false
 
+  revive:
+    rules:
+      - name: var-naming
+        disabled: true
+
+  stylecheck:
+    # STxxxx checks in https://staticcheck.io/docs/configuration/options/#checks
+    # Default: ["*"]
+    checks: ["all", "-ST1003"]
 linters:
   disable-all: true
   enable:
