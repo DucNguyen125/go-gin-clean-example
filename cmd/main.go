@@ -4,9 +4,13 @@ import (
 	"base-gin-golang/config"
 	"base-gin-golang/infra/postgresql"
 	"base-gin-golang/infra/postgresql/repository"
+	"base-gin-golang/middlewares"
 	dataPkg "base-gin-golang/pkg/data"
+	jwtPkg "base-gin-golang/pkg/jwt"
 	"base-gin-golang/pkg/logger"
+	stringPkg "base-gin-golang/pkg/string"
 	"base-gin-golang/routers"
+	"base-gin-golang/usecase/auth"
 	"base-gin-golang/usecase/product"
 	"context"
 	"errors"
@@ -52,13 +56,25 @@ func main() {
 	}
 	// Service
 	dataService := dataPkg.NewDataService()
+	stringService := stringPkg.NewStringService()
+	jwtService := jwtPkg.NewJwtService(app.config)
 	// Repository
 	productRepository := repository.NewProductRepository(app.database, dataService)
+	userRepository := repository.NewUserRepository(app.database, dataService)
 	// UseCase
 	productUseCase := product.NewProductUseCase(productRepository, dataService, app.database)
+	authUseCase := auth.NewAuthUseCase(*app.config, jwtService, stringService, userRepository)
+	// Middleware
+	middleware := middlewares.NewMiddleware(
+		jwtService,
+		stringService,
+		userRepository,
+	)
 	router := routers.InitRouter(
 		app.config,
+		middleware,
 		productUseCase,
+		authUseCase,
 	)
 	server := &http.Server{
 		Addr:              fmt.Sprintf(":%d", app.config.Port),

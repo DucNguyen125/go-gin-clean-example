@@ -25,43 +25,43 @@ func (w bodyLogWriter) Write(b []byte) (int, error) {
 	return w.ResponseWriter.Write(b)
 }
 
-var ExcludingApis = map[string]bool{
+var ExcludingApisForLog = map[string]bool{
 	"/api/v1/auth/login": true,
 }
 
-func getRequestBody(context *gin.Context) string {
+func getRequestBody(ctx *gin.Context) string {
 	bodyBuffer := &bytes.Buffer{}
-	if strings.Contains(context.Request.Header.Get("Content-Type"), "application/json") {
-		data, _ := io.ReadAll(context.Request.Body)
+	if strings.Contains(ctx.Request.Header.Get("Content-Type"), "application/json") {
+		data, _ := io.ReadAll(ctx.Request.Body)
 		_ = json.Compact(bodyBuffer, data)
-		context.Request.Body = io.NopCloser(bytes.NewBuffer(data)) // Write body back
+		ctx.Request.Body = io.NopCloser(bytes.NewBuffer(data)) // Write body back
 	}
 	return strings.ReplaceAll(bodyBuffer.String(), `"`, `'`)
 }
 
-func getResponseBody(blw *bodyLogWriter, context *gin.Context) string {
-	if strings.Contains(context.Writer.Header().Get("Content-Type"), "application/json") {
+func getResponseBody(blw *bodyLogWriter, ctx *gin.Context) string {
+	if strings.Contains(ctx.Writer.Header().Get("Content-Type"), "application/json") {
 		return strings.ReplaceAll(blw.body.String(), `"`, `'`)
 	}
 	return ""
 }
 
-func RestLogger(context *gin.Context) {
+func (m *middleware) RestLogger(ctx *gin.Context) {
 	processID := uuid.New().String()
-	context.Set("processID", processID)
-	path := context.Request.URL.Path
+	ctx.Set("processID", processID)
+	path := ctx.Request.URL.Path
 	start := time.Now()
-	requestBody := getRequestBody(context)
-	blw := &bodyLogWriter{body: bytes.NewBufferString(""), ResponseWriter: context.Writer}
-	context.Writer = blw
-	context.Next()
-	response := getResponseBody(blw, context)
+	requestBody := getRequestBody(ctx)
+	blw := &bodyLogWriter{body: bytes.NewBufferString(""), ResponseWriter: ctx.Writer}
+	ctx.Writer = blw
+	ctx.Next()
+	response := getResponseBody(blw, ctx)
 	stop := time.Since(start)
 	latency := int(math.Ceil(float64(stop.Nanoseconds()) / 1000000.0)) //nolint:gomnd // common
-	statusCode := context.Writer.Status()
-	clientIP := context.ClientIP()
-	clientUserAgent := context.Request.UserAgent()
-	method := context.Request.Method
+	statusCode := ctx.Writer.Status()
+	clientIP := ctx.ClientIP()
+	clientUserAgent := ctx.Request.UserAgent()
+	method := ctx.Request.Method
 	logDetail := log.Fields{
 		"processID":  processID,
 		"statusCode": statusCode,
@@ -71,16 +71,16 @@ func RestLogger(context *gin.Context) {
 		"path":       path,
 		"userAgent":  clientUserAgent,
 	}
-	if query := context.Request.URL.RawQuery; query != "" {
+	if query := ctx.Request.URL.RawQuery; query != "" {
 		logDetail["query"] = query
 	}
-	if !ExcludingApis[context.Request.URL.Path] {
+	if !ExcludingApisForLog[ctx.Request.URL.Path] {
 		logDetail["requestBody"] = requestBody
 		logDetail["response"] = response
 	}
 	logger := log.WithFields(logDetail)
-	if len(context.Errors) > 0 {
-		logger.Error(context.Errors.ByType(gin.ErrorTypePrivate).String())
+	if len(ctx.Errors) > 0 {
+		logger.Error(ctx.Errors.ByType(gin.ErrorTypePrivate).String())
 	} else {
 		msg := "[GIN]"
 		switch {

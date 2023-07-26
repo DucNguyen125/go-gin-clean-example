@@ -3,6 +3,7 @@ package routers
 import (
 	"base-gin-golang/config"
 	"base-gin-golang/middlewares"
+	"base-gin-golang/usecase/auth"
 	"base-gin-golang/usecase/product"
 	"net/http"
 	"strings"
@@ -20,7 +21,9 @@ import (
 
 func InitRouter(
 	config *config.Environment,
+	middleware middlewares.Middleware,
 	productUseCase product.UseCase,
+	authUseCase auth.UseCase,
 ) *gin.Engine {
 	router := gin.New()
 	router.Use(cors.New(cors.Config{
@@ -40,21 +43,22 @@ func InitRouter(
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour, //nolint:gomnd // common
 	}))
-	router.Use(middlewares.RestLogger)
+	router.Use(middleware.RestLogger)
 	router.Use(gin.Recovery())
 	// Validations
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterValidation("customEmail", validations.CustomEmail) //nolint:errcheck // no-error
 	}
 	apiRouter := router.Group("/api")
-	apiRouter.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
+	apiRouter.GET("/ping", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, gin.H{
 			"message": "pong",
 		})
 	})
 	v1Routers.InitV1Router(
-		apiRouter.Group("/v1"),
+		apiRouter.Group("/v1", middleware.Authentication),
 		productUseCase,
+		authUseCase,
 	)
 	return router
 }

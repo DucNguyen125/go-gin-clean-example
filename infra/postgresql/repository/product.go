@@ -5,9 +5,8 @@ import (
 	"base-gin-golang/domain/repository"
 	"base-gin-golang/infra/postgresql"
 	"base-gin-golang/infra/postgresql/model"
-	"context"
-
 	dataPkg "base-gin-golang/pkg/data"
+	"context"
 
 	"gorm.io/gorm"
 )

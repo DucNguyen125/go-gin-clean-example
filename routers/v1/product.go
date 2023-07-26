@@ -11,19 +11,19 @@ func initProductRouter(
 	r gin.IRouter,
 	productUseCase product.UseCase,
 ) {
-	r.POST("", func(context *gin.Context) {
-		handler.CreateProduct(context, productUseCase)
+	r.POST("", func(ctx *gin.Context) {
+		handler.CreateProduct(ctx, productUseCase)
 	})
-	r.GET("", func(context *gin.Context) {
-		handler.GetListProduct(context, productUseCase)
+	r.GET("", func(ctx *gin.Context) {
+		handler.GetListProduct(ctx, productUseCase)
 	})
-	r.GET("/:id", func(context *gin.Context) {
-		handler.GetProduct(context, productUseCase)
+	r.GET("/:id", func(ctx *gin.Context) {
+		handler.GetProduct(ctx, productUseCase)
 	})
-	r.PUT("/:id", func(context *gin.Context) {
-		handler.UpdateProduct(context, productUseCase)
+	r.PUT("/:id", func(ctx *gin.Context) {
+		handler.UpdateProduct(ctx, productUseCase)
 	})
-	r.DELETE("/:id", func(context *gin.Context) {
-		handler.DeleteProduct(context, productUseCase)
+	r.DELETE("/:id", func(ctx *gin.Context) {
+		handler.DeleteProduct(ctx, productUseCase)
 	})
 }

@@ -14,3 +14,8 @@ type Product struct {
 	internal.Product
 	BaseModel
 }
+
+type User struct {
+	internal.User
+	BaseModel
+}

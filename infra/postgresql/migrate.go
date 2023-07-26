@@ -7,6 +7,9 @@ import (
 )
 
 func initDatabase(db *gorm.DB) error {
-	err := db.AutoMigrate(&model.Product{})
+	if err := db.AutoMigrate(&model.Product{}); err != nil {
+		return err
+	}
+	err := db.AutoMigrate(&model.User{})
 	return err
 }
