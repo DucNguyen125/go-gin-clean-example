@@ -4,7 +4,7 @@ import (
 	"base-gin-golang/config"
 	"base-gin-golang/domain/repository"
 	jwtPkg "base-gin-golang/pkg/jwt"
-	stringPkg "base-gin-golang/pkg/string"
+	passwordPkg "base-gin-golang/pkg/password"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,22 +14,22 @@ type UseCase interface {
 }
 
 type authUseCase struct {
-	cfg            config.Environment
-	jwtService     jwtPkg.Service
-	stringService  stringPkg.Service
-	userRepository repository.UserRepository
+	cfg             config.Environment
+	jwtService      jwtPkg.Service
+	passwordService passwordPkg.Service
+	userRepository  repository.UserRepository
 }
 
 func NewAuthUseCase(
 	cfg config.Environment,
 	jwtService jwtPkg.Service,
-	stringService stringPkg.Service,
+	passwordService passwordPkg.Service,
 	userRepository repository.UserRepository,
 ) UseCase {
 	return &authUseCase{
-		cfg:            cfg,
-		userRepository: userRepository,
-		jwtService:     jwtService,
-		stringService:  stringService,
+		cfg:             cfg,
+		userRepository:  userRepository,
+		jwtService:      jwtService,
+		passwordService: passwordService,
 	}
 }

@@ -3,6 +3,7 @@ package routers
 import (
 	"base-gin-golang/config"
 	"base-gin-golang/middlewares"
+	errorPkg "base-gin-golang/pkg/errors"
 	v1Routers "base-gin-golang/routers/v1"
 	"base-gin-golang/usecase/auth"
 	"base-gin-golang/usecase/product"
@@ -22,6 +23,7 @@ func InitRouter(
 	middleware middlewares.Middleware,
 	productUseCase product.UseCase,
 	authUseCase auth.UseCase,
+	errorService errorPkg.Service,
 ) *gin.Engine {
 	router := gin.New()
 	router.Use(cors.New(cors.Config{
@@ -57,6 +59,7 @@ func InitRouter(
 		apiRouter.Group("/v1", middleware.Authentication),
 		productUseCase,
 		authUseCase,
+		errorService,
 	)
 	return router
 }

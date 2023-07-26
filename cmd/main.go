@@ -6,8 +6,10 @@ import (
 	"base-gin-golang/infra/postgresql/repository"
 	"base-gin-golang/middlewares"
 	dataPkg "base-gin-golang/pkg/data"
+	errorPkg "base-gin-golang/pkg/errors"
 	jwtPkg "base-gin-golang/pkg/jwt"
 	"base-gin-golang/pkg/logger"
+	passwordPkg "base-gin-golang/pkg/password"
 	stringPkg "base-gin-golang/pkg/string"
 	"base-gin-golang/routers"
 	"base-gin-golang/usecase/auth"
@@ -50,20 +52,24 @@ func main() {
 		config:   cfg,
 		database: db,
 	}
-	err = app.database.AutoMigrate()
-	if err != nil {
-		log.Fatal("Error migrating database")
+	if cfg.PostgreSQLMigrate {
+		err = app.database.AutoMigrate()
+		if err != nil {
+			log.Fatal("Error migrating database")
+		}
 	}
 	// Service
 	dataService := dataPkg.NewDataService()
 	stringService := stringPkg.NewStringService()
 	jwtService := jwtPkg.NewJwtService(app.config)
+	passwordService := passwordPkg.NewPasswordService()
+	errorService := errorPkg.NewErrorService(*app.config)
 	// Repository
 	productRepository := repository.NewProductRepository(app.database, dataService)
 	userRepository := repository.NewUserRepository(app.database, dataService)
 	// UseCase
 	productUseCase := product.NewProductUseCase(productRepository, dataService, app.database)
-	authUseCase := auth.NewAuthUseCase(*app.config, jwtService, stringService, userRepository)
+	authUseCase := auth.NewAuthUseCase(*app.config, jwtService, passwordService, userRepository)
 	// Middleware
 	middleware := middlewares.NewMiddleware(
 		jwtService,
@@ -75,6 +81,7 @@ func main() {
 		middleware,
 		productUseCase,
 		authUseCase,
+		errorService,
 	)
 	server := &http.Server{
 		Addr:              fmt.Sprintf(":%d", app.config.Port),

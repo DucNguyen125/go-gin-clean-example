@@ -48,14 +48,16 @@ func (r *productRepository) Create(ctx context.Context, input *entity.Product) (
 func (r *productRepository) GetList(ctx context.Context, input entity.GetListProductOption) ([]*entity.Product, error) {
 	result := []*entity.Product{}
 	query := r.db.WithContext(ctx).Model(&model.Product{})
-	if input.PageIndex > 0 {
-		offset := (input.PageIndex - 1) * input.PageSize
-		query = query.Offset(offset).Limit(input.PageSize)
-	} else {
-		query = query.Limit(input.PageSize)
+	if input.PageSize > 0 {
+		if input.PageIndex > 0 {
+			offset := (input.PageIndex - 1) * input.PageSize
+			query = query.Offset(offset).Limit(input.PageSize)
+		} else {
+			query = query.Limit(input.PageSize)
+		}
 	}
-	if input.Order != nil && *input.Order != "" {
-		query = query.Order(*input.Order)
+	if input.Order != "" {
+		query = query.Order(input.Order)
 	}
 	err := query.Find(&result).Error
 	if err != nil {

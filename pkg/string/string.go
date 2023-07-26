@@ -6,8 +6,6 @@ import (
 )
 
 type Service interface {
-	HashPassword(password string) (string, error)
-	CheckHashPassword(hashPassword string, password string) error
 	ConvertStringToInt(value string) (int, error)
 	Sscanf(str string, format string, v ...interface{}) (int, error)
 }

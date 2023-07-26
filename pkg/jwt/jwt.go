@@ -2,7 +2,7 @@ package jwt
 
 import (
 	"base-gin-golang/config"
-	errorConstants "base-gin-golang/error"
+	errorConstants "base-gin-golang/errors"
 	"time"
 
 	"github.com/golang-jwt/jwt"

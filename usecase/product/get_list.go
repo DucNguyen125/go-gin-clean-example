@@ -7,9 +7,9 @@ import (
 )
 
 type GetListProductInput struct {
-	PageIndex int     `form:"pageIndex"`
-	PageSize  int     `form:"pageSize"`
-	Order     *string `form:"order"`
+	PageIndex int    `form:"pageIndex"`
+	PageSize  int    `form:"pageSize"`
+	Order     string `form:"order"`
 }
 
 func (pu *productUseCase) GetList(ctx *gin.Context, input *GetListProductInput) ([]*entity.Product, error) {

@@ -52,6 +52,12 @@ $ mockgen -package=repository base-gin-golang/domain/repository ProductRepositor
 $ mockgen -package=product base-gin-golang/usecase/product UseCase > mock/usecase/product/main.go
 ```
 
+## Service
+
+```shell
+$ mockgen -package=errors base-gin-golang/pkg/errors Service > mock/pkg/errors/errors.go
+```
+
 # Generate Html Swagger Docs
 
 ```shell

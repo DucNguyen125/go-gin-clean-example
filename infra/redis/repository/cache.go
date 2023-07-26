@@ -2,7 +2,7 @@ package repository
 
 import (
 	"base-gin-golang/domain/repository"
-	errorConstants "base-gin-golang/error"
+	errorConstants "base-gin-golang/errors"
 	redisDb "base-gin-golang/infra/redis"
 	"context"
 	"errors"

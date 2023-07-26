@@ -28,7 +28,7 @@ func (au *authUseCase) Login(ctx *gin.Context, input *LoginInput) (*LoginOutput,
 	if err != nil {
 		return nil, err
 	}
-	err = au.stringService.CheckHashPassword(user.Password, input.Password)
+	err = au.passwordService.CheckHashPassword(user.Password, input.Password)
 	if err != nil {
 		return nil, err
 	}

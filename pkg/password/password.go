@@ -1,8 +1,19 @@
-package string
+package password
 
 import (
 	"golang.org/x/crypto/bcrypt"
 )
+
+type Service interface {
+	HashPassword(password string) (string, error)
+	CheckHashPassword(hashPassword string, password string) error
+}
+
+type stringService struct{}
+
+func NewPasswordService() Service {
+	return &stringService{}
+}
 
 func (s *stringService) HashPassword(password string) (string, error) {
 	hashedPasswordBytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)

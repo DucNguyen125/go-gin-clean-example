@@ -14,4 +14,4 @@ update-dependencies:
 
 .PHONY: install
 install:
-  go mod download
+	go mod download
