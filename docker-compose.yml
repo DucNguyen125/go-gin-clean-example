@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app
+    env_file:
+      - .env.docker
+    ports:
+      - 3000:3000
+    volumes:
+      - ./logs/:/root/logs/
+    restart: unless-stopped
+    depends_on:
+      - database
+    networks:
+      - app-tier
+
+  database:
+    image: postgres:14.5-alpine
+    container_name: database
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: base-gin-golang
+      PGDATA: /data/postgres
+    volumes:
+      - .docker/data/postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - app-tier
+    restart: always
+
+networks:
+  app-tier:
+    driver: bridge
+    name: app-tier
