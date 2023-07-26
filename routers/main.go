@@ -30,6 +30,9 @@ func InitRouter(
 			"Authorization",
 			"X-XSRF-TOKEN",
 		},
+		ExposeHeaders: []string{
+			"Content-Disposition",
+		},
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour, //nolint:gomnd // common
 	}))

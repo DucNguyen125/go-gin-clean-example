@@ -9,40 +9,40 @@ import (
 	"base-gin-golang/usecase/product"
 )
 
-func CreateProduct(c *gin.Context, productUseCase product.UseCase) {
+func CreateProduct(ctx *gin.Context, productUseCase product.UseCase) {
 	var input product.CreateProductInput
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
+	if err := ctx.ShouldBindJSON(&input); err != nil {
+		ctx.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
-	output, err := productUseCase.Create(&input)
+	output, err := productUseCase.Create(ctx, &input)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		ctx.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
-	c.JSON(http.StatusCreated, output)
+	ctx.JSON(http.StatusCreated, output)
 }
 
-func GetProduct(c *gin.Context, productUseCase product.UseCase) {
+func GetProduct(ctx *gin.Context, productUseCase product.UseCase) {
 	var input product.GetProductByIDInput
-	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	input.ID = id
-	output, err := productUseCase.GetByID(&input)
+	output, err := productUseCase.GetByID(ctx, &input)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		ctx.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
-	c.JSON(http.StatusOK, output)
+	ctx.JSON(http.StatusOK, output)
 }
 
-func GetListProduct(c *gin.Context, productUseCase product.UseCase) {
+func GetListProduct(ctx *gin.Context, productUseCase product.UseCase) {
 	var input product.GetListProductInput
-	if err := c.ShouldBind(&input); err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
+	if err := ctx.ShouldBind(&input); err != nil {
+		ctx.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 	if input.PageIndex == 0 {
@@ -55,46 +55,46 @@ func GetListProduct(c *gin.Context, productUseCase product.UseCase) {
 		defaultOrder := "id ASC"
 		input.Order = &defaultOrder
 	}
-	output, err := productUseCase.GetList(&input)
+	output, err := productUseCase.GetList(ctx, &input)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		ctx.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
-	c.JSON(http.StatusOK, output)
+	ctx.JSON(http.StatusOK, output)
 }
 
-func UpdateProduct(c *gin.Context, productUseCase product.UseCase) {
+func UpdateProduct(ctx *gin.Context, productUseCase product.UseCase) {
 	var input product.UpdateProductInput
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
+	if err := ctx.ShouldBindJSON(&input); err != nil {
+		ctx.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
-	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	input.ID = id
-	output, err := productUseCase.Update(&input)
+	output, err := productUseCase.Update(ctx, &input)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		ctx.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
-	c.JSON(http.StatusOK, output)
+	ctx.JSON(http.StatusOK, output)
 }
 
-func DeleteProduct(c *gin.Context, productUseCase product.UseCase) {
+func DeleteProduct(ctx *gin.Context, productUseCase product.UseCase) {
 	var input product.DeleteProductInput
-	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	input.ID = id
-	output, err := productUseCase.Delete(&input)
+	output, err := productUseCase.Delete(ctx, &input)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, output)
+	ctx.JSON(http.StatusOK, output)
 }

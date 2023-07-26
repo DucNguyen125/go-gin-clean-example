@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"errors"
 	"testing"
 
@@ -25,7 +26,7 @@ func TestCreateProduct(t *testing.T) {
 	productRepository := NewProductRepository(&postgresql.Database{DB: mockDB}, mockDataService)
 	mockDataService.EXPECT().Copy(gomock.Any(), gomock.Any()).Return(errors.New("Copy failed"))
 	t.Run("Test copy fail", func(t *testing.T) {
-		_, err := productRepository.Create(&entity.Product{})
+		_, err := productRepository.Create(context.Background(), &entity.Product{})
 		if err != nil && err.Error() != "Copy failed" {
 			t.Errorf("Test copy fail")
 		}
@@ -40,7 +41,7 @@ func TestCreateProduct(t *testing.T) {
 	mockDataService.EXPECT().Copy(gomock.Any(), gomock.Any()).Return(nil).SetArg(0, *product)
 	mockDataService.EXPECT().Copy(gomock.Any(), gomock.Any()).Return(errors.New("Copy failed"))
 	t.Run("Test copy fail", func(t *testing.T) {
-		_, err := productRepository.Create(&entity.Product{})
+		_, err := productRepository.Create(context.Background(), &entity.Product{})
 		if err != nil && err.Error() != "Copy failed" {
 			t.Errorf("Test copy fail")
 		}
@@ -49,7 +50,7 @@ func TestCreateProduct(t *testing.T) {
 	product.ID = 1
 	mockDataService.EXPECT().Copy(gomock.Any(), gomock.Any()).Return(nil).SetArg(1, *product)
 	t.Run("Test all", func(t *testing.T) {
-		_, err := productRepository.Create(&entity.Product{})
+		_, err := productRepository.Create(context.Background(), &entity.Product{})
 		if err != nil {
 			t.Errorf("Test all")
 		}

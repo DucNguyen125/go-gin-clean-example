@@ -16,7 +16,7 @@ import (
 func TestCreateProduct(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-	mockProductUseCase := mockProduct.NewMockProductUseCase(ctrl)
+	mockProductUseCase := mockProduct.NewMockUseCase(ctrl)
 	t.Run("Test", func(t *testing.T) {
 		w := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(w)
@@ -25,7 +25,7 @@ func TestCreateProduct(t *testing.T) {
 			t.Errorf("test create fail")
 		}
 	})
-	mockProductUseCase.EXPECT().Create(gomock.Any()).Return(nil, errors.New("Fail"))
+	mockProductUseCase.EXPECT().Create(gomock.Any(), gomock.Any()).Return(nil, errors.New("Fail"))
 	t.Run("Test create fail", func(t *testing.T) {
 		w := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(w)

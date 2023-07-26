@@ -1,5 +1,7 @@
 package product
 
+import "github.com/gin-gonic/gin"
+
 type DeleteProductInput struct {
 	ID int64
 }
@@ -8,8 +10,8 @@ type DeleteProductOutPut struct {
 	RowsAffected int64 `json:"rowsAffected"`
 }
 
-func (pu *productUseCase) Delete(input *DeleteProductInput) (*DeleteProductOutPut, error) {
-	rowsAffected, err := pu.productRepository.Delete(input.ID)
+func (pu *productUseCase) Delete(ctx *gin.Context, input *DeleteProductInput) (*DeleteProductOutPut, error) {
+	rowsAffected, err := pu.productRepository.Delete(ctx, input.ID)
 	if err != nil {
 		return &DeleteProductOutPut{
 			RowsAffected: 0,

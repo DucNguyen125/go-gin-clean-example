@@ -49,6 +49,10 @@ func (l *Logger) Trace(ctx context.Context, begin time.Time, fc func() (string, 
 	if l.SourceField != "" {
 		fields[l.SourceField] = utils.FileWithLineNum()
 	}
+	processID, ok := ctx.Value("processID").(string)
+	if ok {
+		fields["processID"] = processID
+	}
 	if err != nil && !(errors.Is(err, gorm.ErrRecordNotFound) && l.SkipErrRecordNotFound) {
 		fields[log.ErrorKey] = err
 		log.WithContext(ctx).WithFields(fields).Errorf("%s [%s]", sql, elapsed)

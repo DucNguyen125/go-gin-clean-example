@@ -49,7 +49,7 @@ func main() {
 	// Repository
 	productRepository := repository.NewProductRepository(app.database, dataService)
 	// UseCase
-	productUseCase := product.NewProductUseCase(productRepository, dataService)
+	productUseCase := product.NewProductUseCase(productRepository, dataService, app.database)
 	router := routers.InitRouter(
 		app.config,
 		productUseCase,

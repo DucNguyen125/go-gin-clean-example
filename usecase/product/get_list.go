@@ -2,6 +2,8 @@ package product
 
 import (
 	"base-gin-golang/domain/entity"
+
+	"github.com/gin-gonic/gin"
 )
 
 type GetListProductInput struct {
@@ -10,8 +12,8 @@ type GetListProductInput struct {
 	Order     *string `form:"order"`
 }
 
-func (pu *productUseCase) GetList(input *GetListProductInput) ([]*entity.Product, error) {
-	products, err := pu.productRepository.GetList(entity.GetListProductOption{
+func (pu *productUseCase) GetList(ctx *gin.Context, input *GetListProductInput) ([]*entity.Product, error) {
+	products, err := pu.productRepository.GetList(ctx, entity.GetListProductOption{
 		GetListOption: entity.GetListOption{
 			PageIndex: input.PageIndex,
 			PageSize:  input.PageSize,

@@ -7,3 +7,7 @@ tools:
 .PHONY: hook
 hook:
 	husky install
+
+.PHONY: update-dependencies
+update-dependencies:
+	go get -d -u -t ./... 

@@ -2,7 +2,7 @@ package logger
 
 import (
 	"base-gin-golang/config"
-	"io/ioutil"
+	"io"
 	"os"
 
 	log "github.com/sirupsen/logrus"
@@ -25,7 +25,8 @@ func Init(cfg *config.Environment) {
 		log.Error(err)
 	}
 	if cfg.ExportLog {
-		log.SetOutput(ioutil.Discard)
+		log.SetOutput(io.Discard)
+		log.SetFormatter(&log.JSONFormatter{})
 		log.AddHook(&writer.Hook{
 			Writer: errorLogFile,
 			LogLevels: []log.Level{
