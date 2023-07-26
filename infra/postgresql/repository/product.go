@@ -8,7 +8,6 @@ import (
 	dataPkg "base-gin-golang/pkg/data"
 	"context"
 
-	"github.com/google/wire"
 	"gorm.io/gorm"
 )
 
@@ -16,8 +15,6 @@ type productRepository struct {
 	db          *postgresql.Database
 	dataService dataPkg.Service
 }
-
-var ProductProviderSet = wire.NewSet(NewProductRepository)
 
 func NewProductRepository(db *postgresql.Database, dataService dataPkg.Service) repository.ProductRepository {
 	return &productRepository{

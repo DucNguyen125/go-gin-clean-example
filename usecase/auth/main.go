@@ -7,7 +7,6 @@ import (
 	passwordPkg "base-gin-golang/pkg/password"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/wire"
 )
 
 type UseCase interface {
@@ -20,8 +19,6 @@ type authUseCase struct {
 	passwordService passwordPkg.Service
 	userRepository  repository.UserRepository
 }
-
-var ProviderSet = wire.NewSet(NewAuthUseCase)
 
 func NewAuthUseCase(
 	cfg *config.Environment,

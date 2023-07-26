@@ -1,7 +1,6 @@
 package data
 
 import (
-	"github.com/google/wire"
 	"github.com/jinzhu/copier"
 )
 
@@ -10,8 +9,6 @@ type Service interface {
 }
 
 type dataService struct{}
-
-var ProviderSet = wire.NewSet(NewDataService)
 
 func NewDataService() Service {
 	return &dataService{}

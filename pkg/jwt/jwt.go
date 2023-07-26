@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
-	"github.com/google/wire"
 )
 
 type CustomJwtClaims struct {
@@ -29,8 +28,6 @@ type Service interface {
 type jwtService struct {
 	cfg *config.Environment
 }
-
-var ProviderSet = wire.NewSet(NewJwtService)
 
 func NewJwtService(cfg *config.Environment) Service {
 	return &jwtService{

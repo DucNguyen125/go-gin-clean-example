@@ -23,17 +23,17 @@ import (
 func InitApp(config *config.Environment, database *postgresql.Database) (App, error) {
 	panic(wire.Build(
 		// Service
-		dataPkg.ProviderSet,
-		stringPkg.ProviderSet,
-		jwtPkg.ProviderSet,
-		passwordPkg.ProviderSet,
-		errorPkg.ProviderSet,
+		wire.NewSet(dataPkg.NewDataService),
+		wire.NewSet(stringPkg.NewStringService),
+		wire.NewSet(jwtPkg.NewJwtService),
+		wire.NewSet(passwordPkg.NewPasswordService),
+		wire.NewSet(errorPkg.NewErrorService),
 		// Repository
-		repository.ProductProviderSet,
-		repository.UserProviderSet,
+		wire.NewSet(repository.NewProductRepository),
+		wire.NewSet(repository.NewUserRepository),
 		// UseCase
-		product.ProviderSet,
-		auth.ProviderSet,
+		wire.NewSet(product.NewProductUseCase),
+		wire.NewSet(auth.NewAuthUseCase),
 		newApp,
 	))
 }

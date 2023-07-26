@@ -32,7 +32,7 @@
 ├── routers // router for services use REST API
 ├── template // contain fixed template for email, presentation,...
 ├── scripts
-└── usecase // business logic
+├── usecase // business logic
 └── validations // custom validation
 ```
 
@@ -70,3 +70,11 @@ $ redoc-cli build api/docs/openapi.yaml
 make tools
 make hook
 ```
+
+# Generate wire Dependencies Injection
+
+```shell
+cd cmd/wire
+wire
+```
+
