@@ -1,4 +1,4 @@
-FROM golang:1.20-alpine3.15 AS builder
+FROM golang:1.20.4-alpine3.18 AS builder
 
 ENV GO111MODULE=on
 
@@ -14,7 +14,7 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o app ./cmd/main.go
 
 # Start a new stage from scratch
 
-FROM alpine:3.15
+FROM alpine:3.18
 
 RUN apk --no-cache add ca-certificates
 

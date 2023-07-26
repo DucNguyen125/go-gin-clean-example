@@ -50,6 +50,7 @@ services:
 
   elasticsearch:
     image: elasticsearch:8.3.2
+    container_name: elasticsearch
     environment:
       - xpack.security.enabled=false
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
@@ -69,6 +70,41 @@ services:
       - .docker/data/mongodb:/data/db
     ports:
       - "27017:27017"
+    networks:
+      - app-tier
+    restart: always
+
+  logstash:
+    image: logstash:8.3.2
+    container_name: logstash
+    volumes:
+      - ./infrastructure_config/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+    depends_on:
+      - elasticsearch
+    networks:
+      - app-tier
+    restart: always
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.3.2
+    container_name: filebeat
+    command: filebeat -e -strict.perms=false
+    depends_on:
+      - elasticsearch
+    volumes:
+      - ./infrastructure_config/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - ./logs/:/logs/
+    networks:
+      - app-tier
+    restart: always
+
+  kibana:
+    image: kibana:8.3.2
+    container_name: kibana
+    depends_on:
+      - elasticsearch
+    ports:
+      - 5601:5601
     networks:
       - app-tier
     restart: always
