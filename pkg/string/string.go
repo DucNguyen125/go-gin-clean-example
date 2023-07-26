@@ -3,6 +3,8 @@ package string
 import (
 	"fmt"
 	"strconv"
+
+	"github.com/google/wire"
 )
 
 type Service interface {
@@ -11,6 +13,8 @@ type Service interface {
 }
 
 type stringService struct{}
+
+var ProviderSet = wire.NewSet(NewStringService)
 
 func NewStringService() Service {
 	return &stringService{}

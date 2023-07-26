@@ -4,6 +4,8 @@ import (
 	"base-gin-golang/config"
 	customErrors "base-gin-golang/pkg/errors/custom"
 	"net/http"
+
+	"github.com/google/wire"
 )
 
 type Service interface {
@@ -11,10 +13,12 @@ type Service interface {
 }
 
 type errorService struct {
-	cfg config.Environment
+	cfg *config.Environment
 }
 
-func NewErrorService(cfg config.Environment) Service {
+var ProviderSet = wire.NewSet(NewErrorService)
+
+func NewErrorService(cfg *config.Environment) Service {
 	return &errorService{cfg}
 }
 

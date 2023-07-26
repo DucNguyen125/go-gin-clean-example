@@ -7,6 +7,7 @@ import (
 	dataPkg "base-gin-golang/pkg/data"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/wire"
 )
 
 type UseCase interface {
@@ -23,6 +24,8 @@ type productUseCase struct {
 	dataService       dataPkg.Service
 	database          *postgresql.Database
 }
+
+var ProviderSet = wire.NewSet(NewProductUseCase)
 
 func NewProductUseCase(
 	productRepository repository.ProductRepository,

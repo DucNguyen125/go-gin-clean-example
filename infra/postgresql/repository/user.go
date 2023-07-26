@@ -7,12 +7,16 @@ import (
 	"base-gin-golang/infra/postgresql/model"
 	dataPkg "base-gin-golang/pkg/data"
 	"context"
+
+	"github.com/google/wire"
 )
 
 type userRepository struct {
 	db          *postgresql.Database
 	dataService dataPkg.Service
 }
+
+var UserProviderSet = wire.NewSet(NewUserRepository)
 
 func NewUserRepository(db *postgresql.Database, dataService dataPkg.Service) repository.UserRepository {
 	return &userRepository{

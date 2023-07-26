@@ -1,12 +1,17 @@
 package data
 
-import "github.com/jinzhu/copier"
+import (
+	"github.com/google/wire"
+	"github.com/jinzhu/copier"
+)
 
 type Service interface {
 	Copy(to interface{}, from interface{}) error
 }
 
 type dataService struct{}
+
+var ProviderSet = wire.NewSet(NewDataService)
 
 func NewDataService() Service {
 	return &dataService{}

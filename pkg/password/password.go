@@ -1,6 +1,7 @@
 package password
 
 import (
+	"github.com/google/wire"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -10,6 +11,8 @@ type Service interface {
 }
 
 type stringService struct{}
+
+var ProviderSet = wire.NewSet(NewPasswordService)
 
 func NewPasswordService() Service {
 	return &stringService{}
