@@ -8,13 +8,19 @@ import (
 	"base-gin-golang/pkg/logger"
 	"base-gin-golang/routers"
 	"base-gin-golang/usecase/product"
+	"context"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/sirupsen/logrus"
 )
 
 type App struct {
@@ -59,10 +65,20 @@ func main() {
 		ReadHeaderTimeout: 3 * time.Second, //nolint:gomnd // common
 		Handler:           router,
 	}
-	log.Printf("[info] start http server listening: %d", app.config.Port)
-	if err = server.ListenAndServe(); err != nil {
-		log.Fatal("Fail to start error server")
+	done := make(chan bool)
+	go func() {
+		if subErr := gracefulShutDown(app.config, done, server); subErr != nil {
+			logrus.Errorf("Stop server shutdown error: %v", err.Error())
+			return
+		}
+		logrus.Info("Stopped serving on Services")
+	}()
+	log.Printf("Start HTTP Server, Listening: %d", app.config.Port)
+	if err = server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+		log.Fatalf("Start HTTP Server Failed. Error: %s", err.Error())
 	}
+	<-done
+	logrus.Info("Stopped backend application.")
 }
 
 func loadEnvironment() *config.Environment {
@@ -72,4 +88,17 @@ func loadEnvironment() *config.Environment {
 		log.Fatal("Fail loading environment variables: ", err)
 	}
 	return cfg
+}
+
+func gracefulShutDown(config *config.Environment, quit chan bool, server *http.Server) error {
+	signals := make(chan os.Signal, 1)
+	signal.Notify(signals, os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
+	<-signals
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(config.SystemShutdownTimeOutSecond)*time.Second)
+	defer cancel()
+	if err := server.Shutdown(ctx); err != nil {
+		return err
+	}
+	close(quit)
+	return nil
 }

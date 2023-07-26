@@ -185,6 +185,11 @@ linters-settings:
     # Default: false
     all: true
 
+  predeclared:
+    # Comma-separated list of predeclared identifiers to not report on.
+    # Default: ""
+    ignore: "error"
+
 linters:
   disable-all: true
   enable:

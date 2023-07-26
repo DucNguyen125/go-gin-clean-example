@@ -34,7 +34,50 @@ services:
       - app-tier
     restart: always
 
+  redis:
+    image: redis:7.0-alpine
+    container_name: redis
+    env_file:
+      - .env.docker
+    command: redis-server --save 60 1 --requirepass $REDIS_PASSWORD
+    volumes:
+      - .docker/data/redis:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - app-tier
+    restart: always
+
+  elasticsearch:
+    image: elasticsearch:8.3.2
+    environment:
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    volumes:
+      - ./infrastructure_config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - app-tier
+    restart: always
+
+  mongodb:
+    image: mongo:6.0.5
+    container_name: mongodb
+    volumes:
+      - .docker/data/mongodb:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - app-tier
+    restart: always
+
 networks:
   app-tier:
     driver: bridge
     name: app-tier
+
+volumes:
+  elasticsearch-data:
+    driver: local

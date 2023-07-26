@@ -22,12 +22,17 @@ var numberRetryConnect = 3
 func ConnectPostgresql(cfg *config.Environment) (*Database, error) {
 	var db *gorm.DB
 	var err error
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+	sslMode := "disable"
+	if cfg.PostgreSQLUseSSL {
+		sslMode = "require"
+	}
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s",
 		cfg.PostgresqlHost,
 		cfg.PostgresqlUserName,
 		cfg.PostgresqlPassword,
 		cfg.PostgresqlDatabase,
 		cfg.PostgresqlPort,
+		sslMode,
 	)
 	for i := 0; i < 3; i++ {
 		db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{

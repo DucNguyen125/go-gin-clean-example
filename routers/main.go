@@ -10,8 +10,12 @@ import (
 
 	v1Routers "base-gin-golang/routers/v1"
 
+	"base-gin-golang/validations"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator/v10"
 )
 
 func InitRouter(
@@ -38,6 +42,10 @@ func InitRouter(
 	}))
 	router.Use(middlewares.RestLogger)
 	router.Use(gin.Recovery())
+	// Validations
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		v.RegisterValidation("customEmail", validations.CustomEmail) //nolint:errcheck // no-error
+	}
 	apiRouter := router.Group("/api")
 	apiRouter.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
