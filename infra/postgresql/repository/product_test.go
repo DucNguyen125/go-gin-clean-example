@@ -2,8 +2,8 @@ package repository
 
 import (
 	"base-gin-golang/domain/entity"
-	"base-gin-golang/infra/postgresql"
 	"base-gin-golang/infra/postgresql/model"
+	mockPostgreSQL "base-gin-golang/mock/infra/postgresql"
 	mockDataPkg "base-gin-golang/mock/pkg/data"
 	"context"
 	"errors"
@@ -11,18 +11,19 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/jinzhu/copier"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 )
 
 func TestCreateProduct(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 	mockDataService := mockDataPkg.NewMockDataService(ctrl)
-	mockDB, _ := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	mockDB, errConnect := mockPostgreSQL.ConnectPostgresql()
+	if errConnect != nil {
+		t.Errorf("connect db fail")
+	}
 	mockDB.Migrator().DropTable(&model.Product{})
-	mockDB.AutoMigrate(&model.Product{})
-	productRepository := NewProductRepository(&postgresql.Database{DB: mockDB}, mockDataService)
+	mockDB.DB.AutoMigrate(&model.Product{})
+	productRepository := NewProductRepository(mockDB, mockDataService)
 	mockDataService.EXPECT().Copy(gomock.Any(), gomock.Any()).Return(errors.New("Copy failed"))
 	t.Run("Test copy fail", func(t *testing.T) {
 		_, err := productRepository.Create(context.Background(), &entity.Product{})
