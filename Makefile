@@ -6,7 +6,7 @@ tools:
 	go install github.com/google/wire/cmd/wire@latest
 
 .PHONY: hook
-hook:
+hook: tools
 	husky install
 
 .PHONY: update-dependencies
@@ -16,3 +16,8 @@ update-dependencies:
 .PHONY: install
 install:
 	go mod download
+
+.PHONY: test
+test:
+	go test -v -coverpkg=./... -coverprofile=profile.cov ./... -parallel 1 -failfast
+	go tool cover -func profile.cov

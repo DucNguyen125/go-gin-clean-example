@@ -2,6 +2,7 @@ package auth
 
 import (
 	jwtPkg "base-gin-golang/pkg/jwt"
+	"base-gin-golang/pkg/logger"
 
 	"github.com/gin-gonic/gin"
 )
@@ -26,10 +27,12 @@ type LoginOutput struct {
 func (au *authUseCase) Login(ctx *gin.Context, input *LoginInput) (*LoginOutput, error) {
 	user, err := au.userRepository.GetByEmail(ctx, input.Email)
 	if err != nil {
+		logger.LogHandler(ctx, err)
 		return nil, err
 	}
 	err = au.passwordService.CheckHashPassword(user.Password, input.Password)
 	if err != nil {
+		logger.LogHandler(ctx, err)
 		return nil, err
 	}
 	accessToken, err := au.jwtService.GenerateAccessToken(&jwtPkg.GenerateTokenInput{
@@ -37,6 +40,7 @@ func (au *authUseCase) Login(ctx *gin.Context, input *LoginInput) (*LoginOutput,
 		Email:  user.Email,
 	})
 	if err != nil {
+		logger.LogHandler(ctx, err)
 		return nil, err
 	}
 	refreshToken, err := au.jwtService.GenerateRefreshToken(&jwtPkg.GenerateTokenInput{
@@ -44,6 +48,7 @@ func (au *authUseCase) Login(ctx *gin.Context, input *LoginInput) (*LoginOutput,
 		Email:  user.Email,
 	})
 	if err != nil {
+		logger.LogHandler(ctx, err)
 		return nil, err
 	}
 	return &LoginOutput{

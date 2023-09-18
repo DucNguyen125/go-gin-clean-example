@@ -6,3 +6,4 @@ __debug_bin
 .docker
 test.db
 main
+profile.cov

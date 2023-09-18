@@ -4,24 +4,26 @@ import (
 	"errors"
 	"testing"
 
-	"base-gin-golang/infra/postgresql"
 	mockRepository "base-gin-golang/mock/domain/repository"
+	mockPostgreSQL "base-gin-golang/mock/infra/postgresql"
 	mockDataPkg "base-gin-golang/mock/pkg/data"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 )
 
 func TestCreate(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 	ctx := &gin.Context{}
-	mockDB, _ := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	ctx.Set("processID", "processID")
+	mockDB, errConnect := mockPostgreSQL.ConnectPostgresql()
+	if errConnect != nil {
+		t.Errorf("connect db fail")
+	}
 	mockProductRepository := mockRepository.NewMockProductRepository(ctrl)
 	mockDataService := mockDataPkg.NewMockDataService(ctrl)
-	productUseCase := NewProductUseCase(mockProductRepository, mockDataService, &postgresql.Database{DB: mockDB})
+	productUseCase := NewProductUseCase(mockProductRepository, mockDataService, mockDB)
 	mockDataService.EXPECT().Copy(gomock.Any(), gomock.Any()).Return(errors.New("Copy fail"))
 	t.Run("Test copy fail", func(t *testing.T) {
 		_, err := productUseCase.Create(ctx, &CreateProductInput{})

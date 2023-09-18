@@ -2,6 +2,7 @@ package product
 
 import (
 	"base-gin-golang/domain/entity"
+	"base-gin-golang/pkg/logger"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,6 +22,7 @@ func (pu *productUseCase) GetList(ctx *gin.Context, input *GetListProductInput) 
 		},
 	})
 	if err != nil {
+		logger.LogHandler(ctx, err)
 		return nil, err
 	}
 	return products, nil

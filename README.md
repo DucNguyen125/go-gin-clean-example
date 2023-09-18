@@ -67,7 +67,6 @@ $ redoc-cli build api/docs/openapi.yaml
 # Apply git hook
 
 ```shell
-make tools
 make hook
 ```
 
