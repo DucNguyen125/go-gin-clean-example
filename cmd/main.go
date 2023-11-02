@@ -1,12 +1,6 @@
 package main
 
 import (
-	"base-gin-golang/cmd/wire"
-	"base-gin-golang/config"
-	"base-gin-golang/infra/postgresql"
-	"base-gin-golang/middlewares"
-	"base-gin-golang/pkg/logger"
-	"base-gin-golang/routers"
 	"context"
 	"errors"
 	"fmt"
@@ -16,6 +10,13 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"base-gin-golang/cmd/wire"
+	"base-gin-golang/config"
+	"base-gin-golang/infra/postgresql"
+	"base-gin-golang/middlewares"
+	"base-gin-golang/pkg/logger"
+	"base-gin-golang/routers"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -93,7 +94,10 @@ func gracefulShutDown(config *config.Environment, quit chan bool, server *http.S
 	signals := make(chan os.Signal, 1)
 	signal.Notify(signals, os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
 	<-signals
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(config.SystemShutdownTimeOutSecond)*time.Second)
+	ctx, cancel := context.WithTimeout(
+		context.Background(),
+		time.Duration(config.SystemShutdownTimeOutSecond)*time.Second,
+	)
 	defer cancel()
 	if err := server.Shutdown(ctx); err != nil {
 		return err

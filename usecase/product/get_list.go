@@ -13,7 +13,10 @@ type GetListProductInput struct {
 	Order     string `form:"order"`
 }
 
-func (pu *productUseCase) GetList(ctx *gin.Context, input *GetListProductInput) ([]*entity.Product, error) {
+func (pu *productUseCase) GetList(
+	ctx *gin.Context,
+	input *GetListProductInput,
+) ([]*entity.Product, error) {
 	products, err := pu.productRepository.GetList(ctx, entity.GetListProductOption{
 		GetListOption: entity.GetListOption{
 			PageIndex: input.PageIndex,

@@ -1,9 +1,10 @@
 package jwt
 
 import (
+	"time"
+
 	"base-gin-golang/config"
 	errorConstants "base-gin-golang/errors"
-	"time"
 
 	"github.com/golang-jwt/jwt"
 )
@@ -39,7 +40,9 @@ func (s *jwtService) GenerateAccessToken(input *GenerateTokenInput) (string, err
 	claims := &CustomJwtClaims{
 		*input,
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Duration(s.cfg.AccessTokenExpireMinute) * time.Minute).Unix(),
+			ExpiresAt: time.Now().
+				Add(time.Duration(s.cfg.AccessTokenExpireMinute) * time.Minute).
+				Unix(),
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -54,7 +57,9 @@ func (s *jwtService) GenerateRefreshToken(input *GenerateTokenInput) (string, er
 	claims := &CustomJwtClaims{
 		*input,
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Duration(s.cfg.RefreshTokenExpireHour) * time.Hour).Unix(),
+			ExpiresAt: time.Now().
+				Add(time.Duration(s.cfg.RefreshTokenExpireHour) * time.Hour).
+				Unix(),
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -68,9 +73,13 @@ func (s *jwtService) GenerateRefreshToken(input *GenerateTokenInput) (string, er
 func (s *jwtService) ValidateAccessToken(tokenString string) (*CustomJwtClaims, error) {
 	claims := &CustomJwtClaims{}
 	jwtKey := []byte(s.cfg.AccessTokenSecretKey)
-	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-		return jwtKey, nil
-	})
+	token, err := jwt.ParseWithClaims(
+		tokenString,
+		claims,
+		func(token *jwt.Token) (interface{}, error) {
+			return jwtKey, nil
+		},
+	)
 	if err != nil {
 		v, ok := err.(*jwt.ValidationError)
 		if !ok {
@@ -90,9 +99,13 @@ func (s *jwtService) ValidateAccessToken(tokenString string) (*CustomJwtClaims, 
 func (s *jwtService) ValidateRefreshToken(tokenString string) (*CustomJwtClaims, error) {
 	claims := &CustomJwtClaims{}
 	jwtKey := []byte(s.cfg.RefreshTokenSecretKey)
-	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-		return jwtKey, nil
-	})
+	token, err := jwt.ParseWithClaims(
+		tokenString,
+		claims,
+		func(token *jwt.Token) (interface{}, error) {
+			return jwtKey, nil
+		},
+	)
 	if err != nil {
 		v, ok := err.(*jwt.ValidationError)
 		if !ok {

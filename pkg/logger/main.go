@@ -1,9 +1,10 @@
 package logger
 
 import (
-	"base-gin-golang/config"
 	"io"
 	"os"
+
+	"base-gin-golang/config"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/sirupsen/logrus/hooks/writer"
@@ -16,11 +17,11 @@ func Init(cfg *config.Environment) {
 		DisableQuote:    true,
 		DisableColors:   true,
 	})
-	debugLogFile, err := os.OpenFile("logs/debug.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0755)
+	debugLogFile, err := os.OpenFile("logs/debug.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o755)
 	if err != nil {
 		log.Error(err)
 	}
-	errorLogFile, err := os.OpenFile("logs/error.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0755)
+	errorLogFile, err := os.OpenFile("logs/error.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o755)
 	if err != nil {
 		log.Error(err)
 	}

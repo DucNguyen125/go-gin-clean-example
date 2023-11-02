@@ -1,15 +1,15 @@
 package postgresql
 
 import (
-	"base-gin-golang/config"
 	"fmt"
 	"math"
 	"time"
 
-	"github.com/pkg/errors"
-	"gorm.io/driver/postgres"
+	"base-gin-golang/config"
 
+	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
@@ -43,7 +43,9 @@ func ConnectPostgresql(cfg *config.Environment) (*Database, error) {
 		if err != nil {
 			log.Errorf("attempt connecting the database...(%d)\n", i+1)
 			// Retry connecting DB
-			time.Sleep(time.Second * time.Duration(math.Pow(float64(numberRetryConnect), float64(i))))
+			time.Sleep(
+				time.Second * time.Duration(math.Pow(float64(numberRetryConnect), float64(i))),
+			)
 			continue
 		}
 		break

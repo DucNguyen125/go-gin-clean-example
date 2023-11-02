@@ -1,10 +1,11 @@
 package postgresql
 
 import (
-	"base-gin-golang/config"
 	"context"
 	"errors"
 	"time"
+
+	"base-gin-golang/config"
 
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"

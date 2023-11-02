@@ -1,7 +1,18 @@
 #!/bin/bash
 
 go mod tidy
-go fmt ./...
+gofumpt -l -w .
+golines . -w
+
+# Get a list of all unstaged files
+unstaged_files=$(git diff --name-only)
+
+# Check if there are any unstaged files
+if [[ -n $unstaged_files ]]; then
+    echo "There are files that are not staged (unstaged)!"
+    echo "Please add all files to the commit before proceeding."
+    exit 1
+fi
 
 set -e
 while true; do
@@ -14,7 +25,7 @@ while true; do
     fi
 done
 go build cmd/main.go
-golangci-lint run 
+golangci-lint run
 
 LOG_FILE="lint-output.log"
 WHITE_LIST_FILE=".golangci-whitelist"

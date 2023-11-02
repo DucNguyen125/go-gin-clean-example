@@ -1,9 +1,11 @@
 .vscode
 .env
-__debug_bin
+__debug_bin*
 *.log
 .idea
 .docker
-test.db
 main
 profile.cov
+profile.cov
+profile-child.cov
+profile.cov.svg

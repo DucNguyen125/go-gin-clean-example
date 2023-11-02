@@ -1,9 +1,10 @@
 package errors
 
 import (
+	"net/http"
+
 	"base-gin-golang/config"
 	customErrors "base-gin-golang/pkg/errors/custom"
-	"net/http"
 )
 
 type Service interface {

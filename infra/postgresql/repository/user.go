@@ -1,12 +1,13 @@
 package repository
 
 import (
+	"context"
+
 	"base-gin-golang/domain/entity"
 	"base-gin-golang/domain/repository"
 	"base-gin-golang/infra/postgresql"
 	"base-gin-golang/infra/postgresql/model"
 	dataPkg "base-gin-golang/pkg/data"
-	"context"
 )
 
 type userRepository struct {
@@ -14,7 +15,10 @@ type userRepository struct {
 	dataService dataPkg.Service
 }
 
-func NewUserRepository(db *postgresql.Database, dataService dataPkg.Service) repository.UserRepository {
+func NewUserRepository(
+	db *postgresql.Database,
+	dataService dataPkg.Service,
+) repository.UserRepository {
 	return &userRepository{
 		db:          db,
 		dataService: dataService,

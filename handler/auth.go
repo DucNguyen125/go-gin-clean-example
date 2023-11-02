@@ -1,10 +1,11 @@
 package handler
 
 import (
+	"net/http"
+
 	errorPkg "base-gin-golang/pkg/errors"
 	errors "base-gin-golang/pkg/errors/custom"
 	"base-gin-golang/usecase/auth"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )

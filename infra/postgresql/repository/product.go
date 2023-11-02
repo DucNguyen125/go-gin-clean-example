@@ -1,12 +1,13 @@
 package repository
 
 import (
+	"context"
+
 	"base-gin-golang/domain/entity"
 	"base-gin-golang/domain/repository"
 	"base-gin-golang/infra/postgresql"
 	"base-gin-golang/infra/postgresql/model"
 	dataPkg "base-gin-golang/pkg/data"
-	"context"
 
 	"gorm.io/gorm"
 )
@@ -16,14 +17,20 @@ type productRepository struct {
 	dataService dataPkg.Service
 }
 
-func NewProductRepository(db *postgresql.Database, dataService dataPkg.Service) repository.ProductRepository {
+func NewProductRepository(
+	db *postgresql.Database,
+	dataService dataPkg.Service,
+) repository.ProductRepository {
 	return &productRepository{
 		db:          db,
 		dataService: dataService,
 	}
 }
 
-func (r *productRepository) Create(ctx context.Context, input *entity.Product) (*entity.Product, error) {
+func (r *productRepository) Create(
+	ctx context.Context,
+	input *entity.Product,
+) (*entity.Product, error) {
 	query := r.db.WithContext(ctx)
 	tx, ok := ctx.Value("tx").(*gorm.DB)
 	if ok {
@@ -45,7 +52,10 @@ func (r *productRepository) Create(ctx context.Context, input *entity.Product) (
 	return input, nil
 }
 
-func (r *productRepository) GetList(ctx context.Context, input entity.GetListProductOption) ([]*entity.Product, error) {
+func (r *productRepository) GetList(
+	ctx context.Context,
+	input entity.GetListProductOption,
+) ([]*entity.Product, error) {
 	result := []*entity.Product{}
 	query := r.db.WithContext(ctx).Model(&model.Product{})
 	if input.PageSize > 0 {
@@ -75,7 +85,11 @@ func (r *productRepository) GetByID(ctx context.Context, id int64) (*entity.Prod
 	return result, nil
 }
 
-func (r *productRepository) Update(ctx context.Context, id int64, input *entity.Product) (*entity.Product, error) {
+func (r *productRepository) Update(
+	ctx context.Context,
+	id int64,
+	input *entity.Product,
+) (*entity.Product, error) {
 	query := r.db.WithContext(ctx)
 	tx, ok := ctx.Value("tx").(*gorm.DB)
 	if ok {

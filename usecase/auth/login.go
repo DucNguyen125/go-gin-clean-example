@@ -8,7 +8,7 @@ import (
 )
 
 type LoginInput struct {
-	Email    string `json:"email" binding:"required,email,customEmail,max=255"`
+	Email    string `json:"email"    binding:"required,email,customEmail,max=255"`
 	Password string `json:"password" binding:"required"`
 }
 

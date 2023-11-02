@@ -9,8 +9,17 @@ import (
 
 type Service interface {
 	Get(ctx context.Context, urlString string, header map[string]string) ([]byte, error)
-	Post(ctx context.Context, urlString string, header map[string]string, data []byte) ([]byte, error)
-	GetWithOutParse(ctx context.Context, urlString string, header map[string]string) (io.ReadCloser, error)
+	Post(
+		ctx context.Context,
+		urlString string,
+		header map[string]string,
+		data []byte,
+	) ([]byte, error)
+	GetWithOutParse(
+		ctx context.Context,
+		urlString string,
+		header map[string]string,
+	) (io.ReadCloser, error)
 }
 
 type httpService struct{}
@@ -19,8 +28,17 @@ func NewHTTPService() Service {
 	return &httpService{}
 }
 
-func (s *httpService) Get(ctx context.Context, urlString string, header map[string]string) ([]byte, error) {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, urlString, bytes.NewBuffer([]byte{}))
+func (s *httpService) Get(
+	ctx context.Context,
+	urlString string,
+	header map[string]string,
+) ([]byte, error) {
+	req, err := http.NewRequestWithContext(
+		ctx,
+		http.MethodGet,
+		urlString,
+		bytes.NewBuffer([]byte{}),
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -72,7 +90,12 @@ func (s *httpService) GetWithOutParse(
 	urlString string,
 	header map[string]string,
 ) (io.ReadCloser, error) {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, urlString, bytes.NewBuffer([]byte{}))
+	req, err := http.NewRequestWithContext(
+		ctx,
+		http.MethodGet,
+		urlString,
+		bytes.NewBuffer([]byte{}),
+	)
 	if err != nil {
 		return nil, err
 	}

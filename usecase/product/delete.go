@@ -14,7 +14,10 @@ type DeleteProductOutPut struct {
 	RowsAffected int64 `json:"rowsAffected"`
 }
 
-func (pu *productUseCase) Delete(ctx *gin.Context, input *DeleteProductInput) (*DeleteProductOutPut, error) {
+func (pu *productUseCase) Delete(
+	ctx *gin.Context,
+	input *DeleteProductInput,
+) (*DeleteProductOutPut, error) {
 	rowsAffected, err := pu.productRepository.Delete(ctx, input.ID)
 	if err != nil {
 		logger.LogHandler(ctx, err)

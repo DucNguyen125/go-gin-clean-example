@@ -4,6 +4,8 @@ tools:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 	go install github.com/conventionalcommit/commitlint@latest
 	go install github.com/google/wire/cmd/wire@latest
+	go install github.com/segmentio/golines@latest
+	go install mvdan.cc/gofumpt@latest
 
 .PHONY: hook
 hook: tools
@@ -19,5 +21,6 @@ install:
 
 .PHONY: test
 test:
-	go test -v -coverpkg=./... -coverprofile=profile.cov ./... -parallel 1 -failfast
+	# go test -v -coverpkg=./... -coverprofile=profile.cov ./... -parallel 1 -failfast
+	sh scripts/coverage.sh
 	go tool cover -func profile.cov

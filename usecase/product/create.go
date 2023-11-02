@@ -10,10 +10,13 @@ import (
 type CreateProductInput struct {
 	ProductCode string `json:"productCode" binding:"required"`
 	ProductName string `json:"productName" binding:"required"`
-	Price       int    `json:"price" binding:"required"`
+	Price       int    `json:"price"       binding:"required"`
 }
 
-func (pu *productUseCase) Create(ctx *gin.Context, input *CreateProductInput) (*entity.Product, error) {
+func (pu *productUseCase) Create(
+	ctx *gin.Context,
+	input *CreateProductInput,
+) (*entity.Product, error) {
 	data := &entity.Product{}
 	err := pu.dataService.Copy(data, input)
 	if err != nil {

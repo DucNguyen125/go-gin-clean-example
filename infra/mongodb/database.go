@@ -1,9 +1,10 @@
 package redis
 
 import (
-	"base-gin-golang/config"
 	"context"
 	"fmt"
+
+	"base-gin-golang/config"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"

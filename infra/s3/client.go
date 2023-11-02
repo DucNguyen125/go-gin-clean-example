@@ -1,8 +1,9 @@
 package s3
 
 import (
-	"base-gin-golang/config"
 	"context"
+
+	"base-gin-golang/config"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	awsConfig "github.com/aws/aws-sdk-go-v2/config"
@@ -19,7 +20,11 @@ func NewS3Client(cfg *config.Environment) (*Client, error) {
 		context.Background(),
 		awsConfig.WithRegion(cfg.AwsRegion),
 		awsConfig.WithCredentialsProvider(
-			credentials.NewStaticCredentialsProvider(cfg.AwsAccessKeyID, cfg.AwsSecretAccessKey, ""),
+			credentials.NewStaticCredentialsProvider(
+				cfg.AwsAccessKeyID,
+				cfg.AwsSecretAccessKey,
+				"",
+			),
 		))
 	if err != nil {
 		return nil, err

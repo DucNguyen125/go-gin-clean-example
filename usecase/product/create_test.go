@@ -32,7 +32,9 @@ func TestCreate(t *testing.T) {
 		}
 	})
 	mockDataService.EXPECT().Copy(gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
-	mockProductRepository.EXPECT().Create(gomock.Any(), gomock.Any()).Return(nil, errors.New("Fail"))
+	mockProductRepository.EXPECT().
+		Create(gomock.Any(), gomock.Any()).
+		Return(nil, errors.New("Fail"))
 	t.Run("Test create fail", func(t *testing.T) {
 		_, err := productUseCase.Create(ctx, &CreateProductInput{})
 		if err != nil && err.Error() != "Fail" {

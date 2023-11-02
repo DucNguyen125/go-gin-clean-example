@@ -8,7 +8,10 @@ import (
 	"gorm.io/gorm"
 )
 
-func (pu *productUseCase) CreateWithTransaction(ctx *gin.Context, input *CreateProductInput) (*entity.Product, error) {
+func (pu *productUseCase) CreateWithTransaction(
+	ctx *gin.Context,
+	input *CreateProductInput,
+) (*entity.Product, error) {
 	data := &entity.Product{}
 	err := pu.dataService.Copy(data, input)
 	if err != nil {

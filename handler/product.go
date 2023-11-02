@@ -1,17 +1,22 @@
 package handler
 
 import (
+	"net/http"
+	"strconv"
+
 	errorPkg "base-gin-golang/pkg/errors"
 	errors "base-gin-golang/pkg/errors/custom"
 	"base-gin-golang/pkg/pagination"
 	"base-gin-golang/usecase/product"
-	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
-func CreateProduct(ctx *gin.Context, productUseCase product.UseCase, errorService errorPkg.Service) {
+func CreateProduct(
+	ctx *gin.Context,
+	productUseCase product.UseCase,
+	errorService errorPkg.Service,
+) {
 	var input product.CreateProductInput
 	if err := ctx.ShouldBindJSON(&input); err != nil {
 		errValidate := errors.NewValidateError(ctx, input, err)
@@ -45,7 +50,11 @@ func GetProduct(ctx *gin.Context, productUseCase product.UseCase, errorService e
 	ctx.JSON(http.StatusOK, output)
 }
 
-func GetListProduct(ctx *gin.Context, productUseCase product.UseCase, errorService errorPkg.Service) {
+func GetListProduct(
+	ctx *gin.Context,
+	productUseCase product.UseCase,
+	errorService errorPkg.Service,
+) {
 	var input product.GetListProductInput
 	if err := ctx.ShouldBind(&input); err != nil {
 		errValidate := errors.NewValidateError(ctx, input, err)
@@ -67,7 +76,11 @@ func GetListProduct(ctx *gin.Context, productUseCase product.UseCase, errorServi
 	ctx.JSON(http.StatusOK, output)
 }
 
-func UpdateProduct(ctx *gin.Context, productUseCase product.UseCase, errorService errorPkg.Service) {
+func UpdateProduct(
+	ctx *gin.Context,
+	productUseCase product.UseCase,
+	errorService errorPkg.Service,
+) {
 	var input product.UpdateProductInput
 	if err := ctx.ShouldBindJSON(&input); err != nil {
 		errValidate := errors.NewValidateError(ctx, input, err)
@@ -89,7 +102,11 @@ func UpdateProduct(ctx *gin.Context, productUseCase product.UseCase, errorServic
 	ctx.JSON(http.StatusOK, output)
 }
 
-func DeleteProduct(ctx *gin.Context, productUseCase product.UseCase, errorService errorPkg.Service) {
+func DeleteProduct(
+	ctx *gin.Context,
+	productUseCase product.UseCase,
+	errorService errorPkg.Service,
+) {
 	var input product.DeleteProductInput
 	id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	if err != nil {

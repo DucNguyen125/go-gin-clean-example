@@ -1,9 +1,10 @@
 package redis
 
 import (
-	"base-gin-golang/config"
 	"context"
 	"crypto/tls"
+
+	"base-gin-golang/config"
 
 	"github.com/go-redis/redis/v8"
 )

@@ -1,8 +1,9 @@
 package repository
 
 import (
-	"base-gin-golang/domain/entity"
 	"context"
+
+	"base-gin-golang/domain/entity"
 )
 
 type UserRepository interface {

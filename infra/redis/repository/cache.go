@@ -1,12 +1,13 @@
 package repository
 
 import (
-	"base-gin-golang/domain/repository"
-	errorConstants "base-gin-golang/errors"
-	redisDb "base-gin-golang/infra/redis"
 	"context"
 	"errors"
 	"time"
+
+	"base-gin-golang/domain/repository"
+	errorConstants "base-gin-golang/errors"
+	redisDb "base-gin-golang/infra/redis"
 
 	redis "github.com/go-redis/redis/v8"
 )
@@ -32,7 +33,12 @@ func (r *cacheRepository) Get(ctx context.Context, key string) (string, error) {
 	return data, nil
 }
 
-func (r *cacheRepository) Set(ctx context.Context, key string, value interface{}, timeToLive time.Duration) error {
+func (r *cacheRepository) Set(
+	ctx context.Context,
+	key string,
+	value interface{},
+	timeToLive time.Duration,
+) error {
 	err := r.db.Set(ctx, key, value, timeToLive).Err()
 	if err != nil {
 		return err

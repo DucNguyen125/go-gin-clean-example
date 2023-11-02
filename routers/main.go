@@ -1,6 +1,10 @@
 package routers
 
 import (
+	"net/http"
+	"strings"
+	"time"
+
 	"base-gin-golang/config"
 	"base-gin-golang/middlewares"
 	errorPkg "base-gin-golang/pkg/errors"
@@ -8,9 +12,6 @@ import (
 	"base-gin-golang/usecase/auth"
 	"base-gin-golang/usecase/product"
 	"base-gin-golang/validations"
-	"net/http"
-	"strings"
-	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
