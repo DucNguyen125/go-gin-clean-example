@@ -17,7 +17,7 @@ import (
 func TestCreateProduct(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-	mockDataService := mockDataPkg.NewMockDataService(ctrl)
+	mockDataService := mockDataPkg.NewMockService(ctrl)
 	mockDB, errConnect := mockPostgreSQL.ConnectPostgresql()
 	if errConnect != nil {
 		t.Errorf("connect db fail")

@@ -38,24 +38,24 @@
 
 # Mock for testing
 
-Generate mock package `ProductRepository` example
+Name convention: snake_case (ex: order_product)
 
 ## Repository
 
 ```shell
-$ mockgen -package=repository base-gin-golang/domain/repository ProductRepository > mock/domain/repository/product.go
+$ make gen_mock repository=product
 ```
 
 ## UseCase
 
 ```shell
-$ mockgen -package=product base-gin-golang/usecase/product UseCase > mock/usecase/product/main.go
+$ make gen_mock usecase=product
 ```
 
 ## Service
 
 ```shell
-$ mockgen -package=errors base-gin-golang/pkg/errors Service > mock/pkg/errors/errors.go
+$ make gen_mock service=data
 ```
 
 # Generate Html Swagger Docs

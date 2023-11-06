@@ -50,3 +50,15 @@ migrate_down:
     else \
       migrate -database ${DATABASE} -source file://infra/postgresql/migrations down $(step); \
     fi
+
+.PHONY: gen_mock
+gen_mock:
+	@ if [ -n "${repository}" ]; then \
+			sh scripts/gen_mock_repository.sh "${repository}" || exit 1; \
+		fi
+		@ if [ -n "${usecase}" ]; then \
+			sh scripts/gen_mock_usecase.sh "${usecase}" || exit 1; \
+		fi
+		@ if [ -n "${service}" ]; then \
+			sh scripts/gen_mock_service.sh "${service}" || exit 1; \
+		fi

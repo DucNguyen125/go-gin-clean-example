@@ -22,7 +22,7 @@ func TestCreate(t *testing.T) {
 		t.Errorf("connect db fail")
 	}
 	mockProductRepository := mockRepository.NewMockProductRepository(ctrl)
-	mockDataService := mockDataPkg.NewMockDataService(ctrl)
+	mockDataService := mockDataPkg.NewMockService(ctrl)
 	productUseCase := NewProductUseCase(mockProductRepository, mockDataService, mockDB)
 	mockDataService.EXPECT().Copy(gomock.Any(), gomock.Any()).Return(errors.New("Copy fail"))
 	t.Run("Test copy fail", func(t *testing.T) {
