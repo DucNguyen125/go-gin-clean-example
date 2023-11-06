@@ -1,0 +1,125 @@
+package handler
+
+import (
+	"net/http"
+	"strconv"
+
+	errorPkg "base-gin-golang/pkg/errors"
+	errors "base-gin-golang/pkg/errors/custom"
+	"base-gin-golang/pkg/pagination"
+	"base-gin-golang/usecase/{{module_snake}}"
+
+	"github.com/gin-gonic/gin"
+)
+
+func Create{{Module}}(
+	ctx *gin.Context,
+	{{module}}UseCase {{module}}.UseCase,
+	errorService errorPkg.Service,
+) {
+	var input {{module}}.Create{{Module}}Input
+	if err := ctx.ShouldBindJSON(&input); err != nil {
+		errValidate := errors.NewValidateError(ctx, input, err)
+		ctx.JSON(http.StatusBadRequest, errValidate)
+		return
+	}
+	output, err := {{module}}UseCase.Create(ctx, &input)
+	if err != nil {
+		errConverted := errorService.ParseInternalServer(err)
+		ctx.JSON(errConverted.GetHTTPCode(), errConverted)
+		return
+	}
+	ctx.JSON(http.StatusCreated, output)
+}
+
+func Get{{Module}}(ctx *gin.Context, {{module}}UseCase {{module}}.UseCase, errorService errorPkg.Service) {
+	var input {{module}}.Get{{Module}}ByIDInput
+	id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
+	if err != nil {
+		errValidate := errors.NewValidateError(ctx, input, err)
+		ctx.JSON(http.StatusBadRequest, errValidate)
+		return
+	}
+	input.ID = id
+	output, err := {{module}}UseCase.GetByID(ctx, &input)
+	if err != nil {
+		errConverted := errorService.ParseInternalServer(err)
+		ctx.JSON(errConverted.GetHTTPCode(), errConverted)
+		return
+	}
+	ctx.JSON(http.StatusOK, output)
+}
+
+func GetList{{Module}}(
+	ctx *gin.Context,
+	{{module}}UseCase {{module}}.UseCase,
+	errorService errorPkg.Service,
+) {
+	var input {{module}}.GetList{{Module}}Input
+	if err := ctx.ShouldBind(&input); err != nil {
+		errValidate := errors.NewValidateError(ctx, input, err)
+		ctx.JSON(http.StatusBadRequest, errValidate)
+		return
+	}
+	pageIndex, pageSize, order := pagination.GetDefaultPagination(
+		input.PageIndex, input.PageSize, input.Order,
+	)
+	input.PageIndex = pageIndex
+	input.PageSize = pageSize
+	input.Order = order
+	output, err := {{module}}UseCase.GetList(ctx, &input)
+	if err != nil {
+		errConverted := errorService.ParseInternalServer(err)
+		ctx.JSON(errConverted.GetHTTPCode(), errConverted)
+		return
+	}
+	ctx.JSON(http.StatusOK, output)
+}
+
+func Update{{Module}}(
+	ctx *gin.Context,
+	{{module}}UseCase {{module}}.UseCase,
+	errorService errorPkg.Service,
+) {
+	var input {{module}}.Update{{Module}}Input
+	if err := ctx.ShouldBindJSON(&input); err != nil {
+		errValidate := errors.NewValidateError(ctx, input, err)
+		ctx.JSON(http.StatusBadRequest, errValidate)
+		return
+	}
+	id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	input.ID = id
+	output, err := {{module}}UseCase.Update(ctx, &input)
+	if err != nil {
+		errConverted := errorService.ParseInternalServer(err)
+		ctx.JSON(errConverted.GetHTTPCode(), errConverted)
+		return
+	}
+	ctx.JSON(http.StatusOK, output)
+}
+
+func Delete{{Module}}(
+	ctx *gin.Context,
+	{{module}}UseCase {{module}}.UseCase,
+	errorService errorPkg.Service,
+) {
+	var input {{module}}.Delete{{Module}}Input
+	id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
+	if err != nil {
+		errValidate := errors.NewValidateError(ctx, input, err)
+		ctx.JSON(http.StatusBadRequest, errValidate)
+		return
+	}
+	input.ID = id
+	output, err := {{module}}UseCase.Delete(ctx, &input)
+	if err != nil {
+		errConverted := errorService.ParseInternalServer(err)
+		ctx.JSON(errConverted.GetHTTPCode(), errConverted)
+		return
+	}
+	ctx.JSON(http.StatusOK, output)
+}

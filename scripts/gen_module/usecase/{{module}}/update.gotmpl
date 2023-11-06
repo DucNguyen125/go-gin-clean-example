@@ -1,0 +1,32 @@
+package {{module}}
+
+import (
+	"base-gin-golang/domain/entity"
+	"base-gin-golang/pkg/logger"
+
+	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/copier"
+)
+
+type Update{{Module}}Input struct {
+	ID         int64
+	OtherField string `json:"otherField" binding:"required"`
+}
+
+func (u *{{module}}UseCase) Update(
+	ctx *gin.Context,
+	input *Update{{Module}}Input,
+) (*entity.{{Module}}, error) {
+	data := &entity.{{Module}}{}
+	err := copier.Copy(data, input)
+	if err != nil {
+		logger.LogHandler(ctx, err)
+		return nil, err
+	}
+	new{{Module}}, err := u.{{module}}Repository.Update(ctx, input.ID, data)
+	if err != nil {
+		logger.LogHandler(ctx, err)
+		return nil, err
+	}
+	return new{{Module}}, nil
+}

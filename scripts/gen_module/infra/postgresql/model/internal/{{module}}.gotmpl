@@ -1,0 +1,10 @@
+package internal
+
+import "time"
+
+type {{Module}} struct {
+	ID         int       `gorm:"column:id;primaryKey;autoIncrement"`
+	OtherField string    `gorm:"column:other_field"`
+	CreatedAt  time.Time `gorm:"column:created_at;autoCreateTime"`
+	UpdatedAt  time.Time `gorm:"column:updated_at;autoUpdateTime"`
+}

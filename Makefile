@@ -62,3 +62,15 @@ gen_mock:
 		@ if [ -n "${service}" ]; then \
 			sh scripts/gen_mock_service.sh "${service}" || exit 1; \
 		fi
+
+.PHONY: gen
+gen:
+	@ [ -n "${module}" ] && sh scripts/gen_module/gen.sh "${module}"
+
+.PHONY: gen_di
+gen_di:
+	cd cmd/wire && wire
+
+.PHONY: run_server
+run_server:
+	go run cmd/main.go

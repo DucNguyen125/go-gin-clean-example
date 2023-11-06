@@ -1,0 +1,32 @@
+package {{module}}
+
+import (
+	"base-gin-golang/domain/entity"
+	"base-gin-golang/pkg/logger"
+
+	"github.com/gin-gonic/gin"
+)
+
+type GetList{{Module}}Input struct {
+	PageIndex int    `form:"pageIndex"`
+	PageSize  int    `form:"pageSize"`
+	Order     string `form:"order"`
+}
+
+func (u *{{module}}UseCase) GetList(
+	ctx *gin.Context,
+	input *GetList{{Module}}Input,
+) ([]*entity.{{Module}}, error) {
+	{{module}}s, err := u.{{module}}Repository.GetList(ctx, entity.GetList{{Module}}Option{
+		GetListOption: entity.GetListOption{
+			PageIndex: input.PageIndex,
+			PageSize:  input.PageSize,
+			Order:     input.Order,
+		},
+	})
+	if err != nil {
+		logger.LogHandler(ctx, err)
+		return nil, err
+	}
+	return {{module}}s, nil
+}

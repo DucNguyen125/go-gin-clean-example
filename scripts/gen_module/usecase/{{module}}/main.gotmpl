@@ -1,0 +1,32 @@
+package {{module}}
+
+import (
+	"base-gin-golang/domain/entity"
+	"base-gin-golang/domain/repository"
+	dataPkg "base-gin-golang/pkg/data"
+
+	"github.com/gin-gonic/gin"
+)
+
+type UseCase interface {
+	Create(ctx *gin.Context, input *Create{{Module}}Input) (*entity.{{Module}}, error)
+	Delete(ctx *gin.Context, input *Delete{{Module}}Input) (*Delete{{Module}}OutPut, error)
+	GetByID(ctx *gin.Context, input *Get{{Module}}ByIDInput) (*entity.{{Module}}, error)
+	GetList(ctx *gin.Context, input *GetList{{Module}}Input) ([]*entity.{{Module}}, error)
+	Update(ctx *gin.Context, input *Update{{Module}}Input) (*entity.{{Module}}, error)
+}
+
+type {{module}}UseCase struct {
+	{{module}}Repository repository.{{Module}}Repository
+	dataService          dataPkg.Service
+}
+
+func New{{Module}}UseCase(
+	{{module}}Repository repository.{{Module}}Repository,
+	dataService dataPkg.Service,
+) UseCase {
+	return &{{module}}UseCase{
+		{{module}}Repository: {{module}}Repository,
+		dataService:       dataService,
+	}
+}

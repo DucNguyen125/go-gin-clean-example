@@ -36,6 +36,26 @@
 └── validations // custom validation
 ```
 
+# Apply git hook
+
+```shell
+$ make hook
+```
+
+# Generate wire Dependencies Injection
+
+```shell
+$ make gen_di
+```
+
+# Generate module
+
+Name convention: snake_case (ex: order_product)
+
+```shell
+$ make gen module=order
+```
+
 # Mock for testing
 
 Name convention: snake_case (ex: order_product)
@@ -64,24 +84,11 @@ $ make gen_mock service=data
 $ redoc-cli build api/docs/openapi.yaml
 ```
 
-# Apply git hook
-
-```shell
-make hook
-```
-
-# Generate wire Dependencies Injection
-
-```shell
-cd cmd/wire
-wire
-```
-
 # Migration
 
 ## Re-hash atlas
 
 ```shell
-atlas migrate hash --dir file://infra/postgresql/migrations
+$ atlas migrate hash --dir file://infra/postgresql/migrations
 ```
 

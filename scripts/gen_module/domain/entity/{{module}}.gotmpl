@@ -1,0 +1,14 @@
+package entity
+
+import "time"
+
+type {{Module}} struct {
+	ID          int       `json:"id"`
+	OtherField  string    `json:"otherField"`
+	CreatedAt   time.Time `json:"createdAt"`
+	UpdatedAt   time.Time `json:"updatedAt"`
+}
+
+type GetList{{Module}}Option struct {
+	GetListOption
+}

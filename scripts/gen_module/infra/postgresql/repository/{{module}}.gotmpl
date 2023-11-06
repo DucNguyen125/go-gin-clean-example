@@ -1,0 +1,125 @@
+package repository
+
+import (
+	"context"
+
+	"base-gin-golang/domain/entity"
+	"base-gin-golang/domain/repository"
+	"base-gin-golang/infra/postgresql"
+	"base-gin-golang/infra/postgresql/model"
+	dataPkg "base-gin-golang/pkg/data"
+
+	"gorm.io/gorm"
+)
+
+type {{module}}Repository struct {
+	db          *postgresql.Database
+	dataService dataPkg.Service
+}
+
+func New{{Module}}Repository(
+	db *postgresql.Database,
+	dataService dataPkg.Service,
+) repository.{{Module}}Repository {
+	return &{{module}}Repository{
+		db:          db,
+		dataService: dataService,
+	}
+}
+
+func (r *{{module}}Repository) Create(
+	ctx context.Context,
+	input *entity.{{Module}},
+) (*entity.{{Module}}, error) {
+	query := r.db.WithContext(ctx)
+	tx, ok := ctx.Value("tx").(*gorm.DB)
+	if ok {
+		query = tx.WithContext(ctx)
+	}
+	{{module}} := &model.{{Module}}{}
+	err := r.dataService.Copy({{module}}, input)
+	if err != nil {
+		return nil, err
+	}
+	result := query.Create({{module}})
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	err = r.dataService.Copy(input, {{module}})
+	if err != nil {
+		return nil, err
+	}
+	return input, nil
+}
+
+func (r *{{module}}Repository) GetList(
+	ctx context.Context,
+	input entity.GetList{{Module}}Option,
+) ([]*entity.{{Module}}, error) {
+	result := []*entity.{{Module}}{}
+	query := r.db.WithContext(ctx).Model(&model.{{Module}}{})
+	if input.PageSize > 0 {
+		if input.PageIndex > 0 {
+			offset := (input.PageIndex - 1) * input.PageSize
+			query = query.Offset(offset).Limit(input.PageSize)
+		} else {
+			query = query.Limit(input.PageSize)
+		}
+	}
+	if input.Order != "" {
+		query = query.Order(input.Order)
+	}
+	err := query.Find(&result).Error
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (r *{{module}}Repository) GetByID(ctx context.Context, id int64) (*entity.{{Module}}, error) {
+	result := &entity.{{Module}}{}
+	err := r.db.WithContext(ctx).Model(&model.{{Module}}{}).Where("id = ?", id).First(&result).Error
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (r *{{module}}Repository) Update(
+	ctx context.Context,
+	id int64,
+	input *entity.{{Module}},
+) (*entity.{{Module}}, error) {
+	query := r.db.WithContext(ctx)
+	tx, ok := ctx.Value("tx").(*gorm.DB)
+	if ok {
+		query = tx.WithContext(ctx)
+	}
+	{{module}} := &model.{{Module}}{}
+	err := r.dataService.Copy({{module}}, input)
+	if err != nil {
+		return nil, err
+	}
+	result := query.Model(&model.{{Module}}{}).Where("id = ?", id).Updates({{module}})
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	err = r.dataService.Copy(input, {{module}})
+	if err != nil {
+		return nil, err
+	}
+	return input, nil
+}
+
+func (r *{{module}}Repository) Delete(ctx context.Context, id int64) (int64, error) {
+	query := r.db.WithContext(ctx)
+	tx, ok := ctx.Value("tx").(*gorm.DB)
+	if ok {
+		query = tx.WithContext(ctx)
+	}
+	result := query.Delete(&model.{{Module}}{}, id)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	return result.RowsAffected, nil
+}

@@ -1,0 +1,31 @@
+package v1
+
+import (
+	"base-gin-golang/handler"
+	errorPkg "base-gin-golang/pkg/errors"
+	"base-gin-golang/usecase/{{module_snake}}"
+
+	"github.com/gin-gonic/gin"
+)
+
+func init{{Module}}Router(
+	r gin.IRouter,
+	{{module}}UseCase {{module}}.UseCase,
+	errorService errorPkg.Service,
+) {
+	r.POST("", func(ctx *gin.Context) {
+		handler.Create{{Module}}(ctx, {{module}}UseCase, errorService)
+	})
+	r.GET("", func(ctx *gin.Context) {
+		handler.GetList{{Module}}(ctx, {{module}}UseCase, errorService)
+	})
+	r.GET("/:id", func(ctx *gin.Context) {
+		handler.Get{{Module}}(ctx, {{module}}UseCase, errorService)
+	})
+	r.PUT("/:id", func(ctx *gin.Context) {
+		handler.Update{{Module}}(ctx, {{module}}UseCase, errorService)
+	})
+	r.DELETE("/:id", func(ctx *gin.Context) {
+		handler.Delete{{Module}}(ctx, {{module}}UseCase, errorService)
+	})
+}

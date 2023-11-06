@@ -1,0 +1,24 @@
+package {{module}}
+
+import (
+	"base-gin-golang/domain/entity"
+	"base-gin-golang/pkg/logger"
+
+	"github.com/gin-gonic/gin"
+)
+
+type Get{{Module}}ByIDInput struct {
+	ID int64
+}
+
+func (u *{{module}}UseCase) GetByID(
+	ctx *gin.Context,
+	input *Get{{Module}}ByIDInput,
+) (*entity.{{Module}}, error) {
+	{{module}}, err := u.{{module}}Repository.GetByID(ctx, input.ID)
+	if err != nil {
+		logger.LogHandler(ctx, err)
+		return nil, err
+	}
+	return {{module}}, nil
+}

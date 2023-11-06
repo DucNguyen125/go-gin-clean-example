@@ -1,3 +1,8 @@
+if [[ ! "$1" =~ ^[a-z_]+$ ]]; then
+  echo "Error: Repository name is not in snake_case format"
+  exit 1
+fi
+
 snake_to_pascal() {
   local input="$1"
   local result=""
@@ -29,5 +34,3 @@ if [ ! -d "$directory" ]; then
   mkdir -p "$directory"
 fi
 mockgen -package=repository ${go_project}/domain/repository ${repository_name}Repository > mock/domain/repository/$1.go
-
-

@@ -1,0 +1,30 @@
+package {{module}}
+
+import (
+	"base-gin-golang/domain/entity"
+	"base-gin-golang/pkg/logger"
+
+	"github.com/gin-gonic/gin"
+)
+
+type Create{{Module}}Input struct {
+	OtherField string `json:"otherField" binding:"required"`
+}
+
+func (u *{{module}}UseCase) Create(
+	ctx *gin.Context,
+	input *Create{{Module}}Input,
+) (*entity.{{Module}}, error) {
+	data := &entity.{{Module}}{}
+	err := u.dataService.Copy(data, input)
+	if err != nil {
+		logger.LogHandler(ctx, err)
+		return nil, err
+	}
+	new{{Module}}, err := u.{{module}}Repository.Create(ctx, data)
+	if err != nil {
+		logger.LogHandler(ctx, err)
+		return nil, err
+	}
+	return new{{Module}}, nil
+}

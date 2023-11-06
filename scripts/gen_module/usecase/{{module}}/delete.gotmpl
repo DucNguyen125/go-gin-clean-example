@@ -1,0 +1,32 @@
+package {{module}}
+
+import (
+	"base-gin-golang/pkg/logger"
+
+	"github.com/gin-gonic/gin"
+)
+
+type Delete{{Module}}Input struct {
+	ID int64
+}
+
+type Delete{{Module}}OutPut struct {
+	RowsAffected int64 `json:"rowsAffected"`
+}
+
+func (u *{{module}}UseCase) Delete(
+	ctx *gin.Context,
+	input *Delete{{Module}}Input,
+) (*Delete{{Module}}OutPut, error) {
+	rowsAffected, err := u.{{module}}Repository.Delete(ctx, input.ID)
+	if err != nil {
+		logger.LogHandler(ctx, err)
+		return &Delete{{Module}}OutPut{
+			RowsAffected: 0,
+		}, err
+	}
+	output := &Delete{{Module}}OutPut{
+		RowsAffected: rowsAffected,
+	}
+	return output, nil
+}

@@ -1,0 +1,15 @@
+package repository
+
+import (
+	"context"
+
+	"base-gin-golang/domain/entity"
+)
+
+type {{Module}}Repository interface {
+	Create(ctx context.Context, input *entity.{{Module}}) (*entity.{{Module}}, error)
+	GetList(ctx context.Context, query entity.GetList{{Module}}Option) ([]*entity.{{Module}}, error)
+	GetByID(ctx context.Context, id int64) (*entity.{{Module}}, error)
+	Update(ctx context.Context, id int64, input *entity.{{Module}}) (*entity.{{Module}}, error)
+	Delete(ctx context.Context, id int64) (int64, error)
+}

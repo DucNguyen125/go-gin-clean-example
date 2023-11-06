@@ -22,4 +22,3 @@ done
 rm -f profile-child.cov
 
 echo "Done"
-
