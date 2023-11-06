@@ -3,6 +3,7 @@
 go mod tidy
 gofumpt -l -w .
 golines . -w
+atlas migrate diff --env gorm change
 
 # Get a list of all unstaged files
 unstaged_files=$(git diff --name-only)

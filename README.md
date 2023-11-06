@@ -77,3 +77,11 @@ cd cmd/wire
 wire
 ```
 
+# Migration
+
+## Re-hash atlas
+
+```shell
+atlas migrate hash --dir file://infra/postgresql/migrations
+```
+
