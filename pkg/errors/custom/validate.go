@@ -26,7 +26,7 @@ func (ve *ValidateError) Error() string {
 	return ve.Code
 }
 
-func (ve *ValidateError) GetHTTPCode() int {
+func (ve *ValidateError) GetStatus() int {
 	return ve.HTTPCode
 }
 

@@ -2,7 +2,7 @@
 
 go mod tidy
 gofumpt -l -w .
-golines . -w
+golines . -w --ignore-generated --ignored-dirs=.docker
 atlas migrate diff --env gorm change
 
 # Get a list of all unstaged files

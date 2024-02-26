@@ -7,11 +7,15 @@ import (
 )
 
 var ExcludingApisForAuth = map[string]bool{
+	"/api/ping":          true,
 	"/api/v1/auth/login": true,
+	"/docs":              true,
+	"/openapi.json":      true,
+	"/openapi.yaml":      true,
 }
 
 func (m *middleware) Authentication(ctx *gin.Context) {
-	if ExcludingApisForLog[ctx.Request.URL.Path] {
+	if ExcludingApisForAuth[ctx.Request.URL.Path] {
 		return
 	}
 	headerAuthorization := ctx.GetHeader("Authorization")

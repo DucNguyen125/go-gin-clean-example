@@ -1,21 +1,20 @@
 package product
 
 import (
-	"base-gin-golang/domain/entity"
+	"context"
+
 	"base-gin-golang/domain/repository"
 	"base-gin-golang/infra/postgresql"
 	dataPkg "base-gin-golang/pkg/data"
-
-	"github.com/gin-gonic/gin"
 )
 
 type UseCase interface {
-	Create(ctx *gin.Context, input *CreateProductInput) (*entity.Product, error)
-	Delete(ctx *gin.Context, input *DeleteProductInput) (*DeleteProductOutPut, error)
-	GetByID(ctx *gin.Context, input *GetProductByIDInput) (*entity.Product, error)
-	GetList(ctx *gin.Context, input *GetListProductInput) ([]*entity.Product, error)
-	Update(ctx *gin.Context, input *UpdateProductInput) (*entity.Product, error)
-	CreateWithTransaction(ctx *gin.Context, input *CreateProductInput) (*entity.Product, error)
+	Create(ctx context.Context, input *CreateProductInput) (*CreateProductOutput, error)
+	Delete(ctx context.Context, input *DeleteProductInput) (*DeleteProductOutput, error)
+	GetByID(ctx context.Context, input *GetProductByIDInput) (*GetProductByIDOutput, error)
+	GetList(ctx context.Context, input *GetListProductInput) (*GetListProductOutput, error)
+	Update(ctx context.Context, input *UpdateProductInput) (*UpdateProductOutput, error)
+	CreateWithTransaction(ctx context.Context, input *CreateProductInput) (*CreateProductOutput, error)
 }
 
 type productUseCase struct {

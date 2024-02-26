@@ -5,11 +5,10 @@
 package product
 
 import (
-	entity "base-gin-golang/domain/entity"
 	product "base-gin-golang/usecase/product"
+	context "context"
 	reflect "reflect"
 
-	gin "github.com/gin-gonic/gin"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -37,10 +36,10 @@ func (m *MockUseCase) EXPECT() *MockUseCaseMockRecorder {
 }
 
 // Create mocks base method.
-func (m *MockUseCase) Create(arg0 *gin.Context, arg1 *product.CreateProductInput) (*entity.Product, error) {
+func (m *MockUseCase) Create(arg0 context.Context, arg1 *product.CreateProductInput) (*product.CreateProductOutput, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Create", arg0, arg1)
-	ret0, _ := ret[0].(*entity.Product)
+	ret0, _ := ret[0].(*product.CreateProductOutput)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -52,10 +51,10 @@ func (mr *MockUseCaseMockRecorder) Create(arg0, arg1 interface{}) *gomock.Call {
 }
 
 // CreateWithTransaction mocks base method.
-func (m *MockUseCase) CreateWithTransaction(arg0 *gin.Context, arg1 *product.CreateProductInput) (*entity.Product, error) {
+func (m *MockUseCase) CreateWithTransaction(arg0 context.Context, arg1 *product.CreateProductInput) (*product.CreateProductOutput, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateWithTransaction", arg0, arg1)
-	ret0, _ := ret[0].(*entity.Product)
+	ret0, _ := ret[0].(*product.CreateProductOutput)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -67,10 +66,10 @@ func (mr *MockUseCaseMockRecorder) CreateWithTransaction(arg0, arg1 interface{})
 }
 
 // Delete mocks base method.
-func (m *MockUseCase) Delete(arg0 *gin.Context, arg1 *product.DeleteProductInput) (*product.DeleteProductOutPut, error) {
+func (m *MockUseCase) Delete(arg0 context.Context, arg1 *product.DeleteProductInput) (*product.DeleteProductOutput, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Delete", arg0, arg1)
-	ret0, _ := ret[0].(*product.DeleteProductOutPut)
+	ret0, _ := ret[0].(*product.DeleteProductOutput)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -82,10 +81,10 @@ func (mr *MockUseCaseMockRecorder) Delete(arg0, arg1 interface{}) *gomock.Call {
 }
 
 // GetByID mocks base method.
-func (m *MockUseCase) GetByID(arg0 *gin.Context, arg1 *product.GetProductByIDInput) (*entity.Product, error) {
+func (m *MockUseCase) GetByID(arg0 context.Context, arg1 *product.GetProductByIDInput) (*product.GetProductByIDOutput, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetByID", arg0, arg1)
-	ret0, _ := ret[0].(*entity.Product)
+	ret0, _ := ret[0].(*product.GetProductByIDOutput)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -97,10 +96,10 @@ func (mr *MockUseCaseMockRecorder) GetByID(arg0, arg1 interface{}) *gomock.Call 
 }
 
 // GetList mocks base method.
-func (m *MockUseCase) GetList(arg0 *gin.Context, arg1 *product.GetListProductInput) ([]*entity.Product, error) {
+func (m *MockUseCase) GetList(arg0 context.Context, arg1 *product.GetListProductInput) (*product.GetListProductOutput, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetList", arg0, arg1)
-	ret0, _ := ret[0].([]*entity.Product)
+	ret0, _ := ret[0].(*product.GetListProductOutput)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -112,10 +111,10 @@ func (mr *MockUseCaseMockRecorder) GetList(arg0, arg1 interface{}) *gomock.Call 
 }
 
 // Update mocks base method.
-func (m *MockUseCase) Update(arg0 *gin.Context, arg1 *product.UpdateProductInput) (*entity.Product, error) {
+func (m *MockUseCase) Update(arg0 context.Context, arg1 *product.UpdateProductInput) (*product.UpdateProductOutput, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", arg0, arg1)
-	ret0, _ := ret[0].(*entity.Product)
+	ret0, _ := ret[0].(*product.UpdateProductOutput)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

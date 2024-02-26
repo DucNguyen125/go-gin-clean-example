@@ -1,27 +1,24 @@
 package handler
 
 import (
-	"net/http"
+	"context"
 
-	errorPkg "base-gin-golang/pkg/errors"
 	errors "base-gin-golang/pkg/errors/custom"
 	"base-gin-golang/usecase/auth"
-
-	"github.com/gin-gonic/gin"
 )
 
-func Login(ctx *gin.Context, authUseCase auth.UseCase, errorService errorPkg.Service) {
-	var input auth.LoginInput
-	if err := ctx.ShouldBindJSON(&input); err != nil {
+func (h *Handler) Login(
+	ctx context.Context,
+	input *auth.LoginInput,
+) (*auth.LoginOutput, error) {
+	if err := h.Validator.Struct(&input.Body); err != nil {
 		errValidate := errors.NewValidateError(ctx, input, err)
-		ctx.JSON(http.StatusBadRequest, errValidate)
-		return
+		return nil, errValidate
 	}
-	output, err := authUseCase.Login(ctx, &input)
+	output, err := h.App.AuthUseCase.Login(ctx, input)
 	if err != nil {
-		errConverted := errorService.ParseInternalServer(err)
-		ctx.JSON(errConverted.GetHTTPCode(), errConverted)
-		return
+		errConverted := h.App.ErrorService.ParseInternalServer(err)
+		return nil, errConverted
 	}
-	ctx.JSON(http.StatusOK, output)
+	return output, nil
 }

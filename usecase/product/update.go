@@ -1,26 +1,35 @@
 package product
 
 import (
+	"context"
+
 	"base-gin-golang/domain/entity"
 	"base-gin-golang/pkg/logger"
 
-	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
 )
 
+type UpdateProductInputBody struct {
+	ProductCode string `json:"productCode" validate:"required"`
+	ProductName string `json:"productName" validate:"required"`
+	Price       int    `json:"price"       validate:"required"`
+}
+
 type UpdateProductInput struct {
-	ID          int64
-	ProductCode string `json:"productCode" binding:"required"`
-	ProductName string `json:"productName" binding:"required"`
-	Price       int    `json:"price"       binding:"required"`
+	ID   int64 `path:"id"`
+	Body UpdateProductInputBody
+}
+
+type UpdateProductOutput struct {
+	Body *entity.Product
 }
 
 func (pu *productUseCase) Update(
-	ctx *gin.Context,
+	ctx context.Context,
 	input *UpdateProductInput,
-) (*entity.Product, error) {
+) (*UpdateProductOutput, error) {
 	data := &entity.Product{}
-	err := copier.Copy(data, input)
+	err := copier.Copy(data, &input.Body)
 	if err != nil {
 		logger.LogHandler(ctx, err)
 		return nil, err
@@ -30,5 +39,5 @@ func (pu *productUseCase) Update(
 		logger.LogHandler(ctx, err)
 		return nil, err
 	}
-	return newProduct, nil
+	return &UpdateProductOutput{Body: newProduct}, nil
 }

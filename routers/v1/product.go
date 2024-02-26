@@ -1,31 +1,32 @@
 package v1
 
 import (
-	"base-gin-golang/handler"
-	errorPkg "base-gin-golang/pkg/errors"
-	"base-gin-golang/usecase/product"
+	"context"
 
-	"github.com/gin-gonic/gin"
+	"base-gin-golang/handler"
+	routerPkg "base-gin-golang/pkg/router"
+	"base-gin-golang/usecase/product"
 )
 
-func initProductRouter(
-	r gin.IRouter,
-	productUseCase product.UseCase,
-	errorService errorPkg.Service,
-) {
-	r.POST("", func(ctx *gin.Context) {
-		handler.CreateProduct(ctx, productUseCase, errorService)
-	})
-	r.GET("", func(ctx *gin.Context) {
-		handler.GetListProduct(ctx, productUseCase, errorService)
-	})
-	r.GET("/:id", func(ctx *gin.Context) {
-		handler.GetProduct(ctx, productUseCase, errorService)
-	})
-	r.PUT("/:id", func(ctx *gin.Context) {
-		handler.UpdateProduct(ctx, productUseCase, errorService)
-	})
-	r.DELETE("/:id", func(ctx *gin.Context) {
-		handler.DeleteProduct(ctx, productUseCase, errorService)
-	})
+func initProductRouter(rg *routerPkg.RouterGroup, hdl *handler.Handler) {
+	routerPkg.POST("", rg,
+		func(ctx context.Context, input *product.CreateProductInput) (*product.CreateProductOutput, error) {
+			return hdl.CreateProduct(ctx, input)
+		})
+	routerPkg.GET("", rg,
+		func(ctx context.Context, input *product.GetListProductInput) (*product.GetListProductOutput, error) {
+			return hdl.GetListProduct(ctx, input)
+		})
+	routerPkg.GET("/{id}", rg,
+		func(ctx context.Context, input *product.GetProductByIDInput) (*product.GetProductByIDOutput, error) {
+			return hdl.GetProduct(ctx, input)
+		})
+	routerPkg.PUT("/{id}", rg,
+		func(ctx context.Context, input *product.UpdateProductInput) (*product.UpdateProductOutput, error) {
+			return hdl.UpdateProduct(ctx, input)
+		})
+	routerPkg.DELETE("/{id}", rg,
+		func(ctx context.Context, input *product.DeleteProductInput) (*product.DeleteProductOutput, error) {
+			return hdl.DeleteProduct(ctx, input)
+		})
 }

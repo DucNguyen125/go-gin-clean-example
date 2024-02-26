@@ -1,125 +1,83 @@
 package handler
 
 import (
-	"net/http"
-	"strconv"
+	"context"
 
-	errorPkg "base-gin-golang/pkg/errors"
 	errors "base-gin-golang/pkg/errors/custom"
 	"base-gin-golang/pkg/pagination"
 	"base-gin-golang/usecase/product"
-
-	"github.com/gin-gonic/gin"
 )
 
-func CreateProduct(
-	ctx *gin.Context,
-	productUseCase product.UseCase,
-	errorService errorPkg.Service,
-) {
-	var input product.CreateProductInput
-	if err := ctx.ShouldBindJSON(&input); err != nil {
+func (h *Handler) CreateProduct(
+	ctx context.Context,
+	input *product.CreateProductInput,
+) (*product.CreateProductOutput, error) {
+	if err := h.Validator.Struct(&input.Body); err != nil {
 		errValidate := errors.NewValidateError(ctx, input, err)
-		ctx.JSON(http.StatusBadRequest, errValidate)
-		return
+		return nil, errValidate
 	}
-	output, err := productUseCase.Create(ctx, &input)
+	output, err := h.App.ProductUseCase.Create(ctx, input)
 	if err != nil {
-		errConverted := errorService.ParseInternalServer(err)
-		ctx.JSON(errConverted.GetHTTPCode(), errConverted)
-		return
+		errConverted := h.App.ErrorService.ParseInternalServer(err)
+		return nil, errConverted
 	}
-	ctx.JSON(http.StatusCreated, output)
+	return output, err
 }
 
-func GetProduct(ctx *gin.Context, productUseCase product.UseCase, errorService errorPkg.Service) {
-	var input product.GetProductByIDInput
-	id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
+func (h *Handler) GetProduct(
+	ctx context.Context,
+	input *product.GetProductByIDInput,
+) (*product.GetProductByIDOutput, error) {
+	output, err := h.App.ProductUseCase.GetByID(ctx, input)
 	if err != nil {
-		errValidate := errors.NewValidateError(ctx, input, err)
-		ctx.JSON(http.StatusBadRequest, errValidate)
-		return
+		errConverted := h.App.ErrorService.ParseInternalServer(err)
+		return nil, errConverted
 	}
-	input.ID = id
-	output, err := productUseCase.GetByID(ctx, &input)
-	if err != nil {
-		errConverted := errorService.ParseInternalServer(err)
-		ctx.JSON(errConverted.GetHTTPCode(), errConverted)
-		return
-	}
-	ctx.JSON(http.StatusOK, output)
+	return output, nil
 }
 
-func GetListProduct(
-	ctx *gin.Context,
-	productUseCase product.UseCase,
-	errorService errorPkg.Service,
-) {
-	var input product.GetListProductInput
-	if err := ctx.ShouldBind(&input); err != nil {
-		errValidate := errors.NewValidateError(ctx, input, err)
-		ctx.JSON(http.StatusBadRequest, errValidate)
-		return
-	}
+func (h *Handler) GetListProduct(
+	ctx context.Context,
+	input *product.GetListProductInput,
+) (*product.GetListProductOutput, error) {
 	pageIndex, pageSize, order := pagination.GetDefaultPagination(
 		input.PageIndex, input.PageSize, input.Order,
 	)
 	input.PageIndex = pageIndex
 	input.PageSize = pageSize
 	input.Order = order
-	output, err := productUseCase.GetList(ctx, &input)
+	output, err := h.App.ProductUseCase.GetList(ctx, input)
 	if err != nil {
-		errConverted := errorService.ParseInternalServer(err)
-		ctx.JSON(errConverted.GetHTTPCode(), errConverted)
-		return
+		errConverted := h.App.ErrorService.ParseInternalServer(err)
+		return nil, errConverted
 	}
-	ctx.JSON(http.StatusOK, output)
+	return output, nil
 }
 
-func UpdateProduct(
-	ctx *gin.Context,
-	productUseCase product.UseCase,
-	errorService errorPkg.Service,
-) {
-	var input product.UpdateProductInput
-	if err := ctx.ShouldBindJSON(&input); err != nil {
+func (h *Handler) UpdateProduct(
+	ctx context.Context,
+	input *product.UpdateProductInput,
+) (*product.UpdateProductOutput, error) {
+	if err := h.Validator.Struct(&input.Body); err != nil {
 		errValidate := errors.NewValidateError(ctx, input, err)
-		ctx.JSON(http.StatusBadRequest, errValidate)
-		return
+		return nil, errValidate
 	}
-	id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
+	output, err := h.App.ProductUseCase.Update(ctx, input)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		errConverted := h.App.ErrorService.ParseInternalServer(err)
+		return nil, errConverted
 	}
-	input.ID = id
-	output, err := productUseCase.Update(ctx, &input)
-	if err != nil {
-		errConverted := errorService.ParseInternalServer(err)
-		ctx.JSON(errConverted.GetHTTPCode(), errConverted)
-		return
-	}
-	ctx.JSON(http.StatusOK, output)
+	return output, nil
 }
 
-func DeleteProduct(
-	ctx *gin.Context,
-	productUseCase product.UseCase,
-	errorService errorPkg.Service,
-) {
-	var input product.DeleteProductInput
-	id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
+func (h *Handler) DeleteProduct(
+	ctx context.Context,
+	input *product.DeleteProductInput,
+) (*product.DeleteProductOutput, error) {
+	output, err := h.App.ProductUseCase.Delete(ctx, input)
 	if err != nil {
-		errValidate := errors.NewValidateError(ctx, input, err)
-		ctx.JSON(http.StatusBadRequest, errValidate)
-		return
+		errConverted := h.App.ErrorService.ParseInternalServer(err)
+		return nil, errConverted
 	}
-	input.ID = id
-	output, err := productUseCase.Delete(ctx, &input)
-	if err != nil {
-		errConverted := errorService.ParseInternalServer(err)
-		ctx.JSON(errConverted.GetHTTPCode(), errConverted)
-		return
-	}
-	ctx.JSON(http.StatusOK, output)
+	return output, nil
 }

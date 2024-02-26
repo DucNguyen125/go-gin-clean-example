@@ -10,6 +10,6 @@ func (ise *InternalServerError) Error() string {
 	return ise.Code
 }
 
-func (ise *InternalServerError) GetHTTPCode() int {
+func (ise *InternalServerError) GetStatus() int {
 	return ise.HTTPCode
 }

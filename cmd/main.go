@@ -1,15 +1,7 @@
 package main
 
 import (
-	"context"
-	"errors"
-	"fmt"
 	"log"
-	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
-	"time"
 
 	"base-gin-golang/cmd/wire"
 	"base-gin-golang/config"
@@ -19,8 +11,8 @@ import (
 	"base-gin-golang/routers"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
-	"github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -45,7 +37,7 @@ func main() {
 	}
 	app, err := wire.InitApp(cfg, db)
 	if err != nil {
-		log.Fatal("Error initing app")
+		log.Fatal("Error create app")
 	}
 	// Middleware
 	middleware := middlewares.NewMiddleware(
@@ -53,32 +45,14 @@ func main() {
 		app.StringService,
 		app.UserRepository,
 	)
-	router := routers.InitRouter(
+	vld := validator.New()
+	cli := routers.InitRouter(
 		cfg,
 		middleware,
-		app.ProductUseCase,
-		app.AuthUseCase,
-		app.ErrorService,
+		&app,
+		vld,
 	)
-	server := &http.Server{
-		Addr:              fmt.Sprintf(":%d", cfg.Port),
-		ReadHeaderTimeout: 3 * time.Second, //nolint:gomnd // common
-		Handler:           router,
-	}
-	done := make(chan bool)
-	go func() {
-		if subErr := gracefulShutDown(cfg, done, server); subErr != nil {
-			logrus.Errorf("Stop server shutdown error: %v", err.Error())
-			return
-		}
-		logrus.Info("Stopped serving on Services")
-	}()
-	log.Printf("Start HTTP Server, Listening: %d", cfg.Port)
-	if err = server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-		log.Fatalf("Start HTTP Server Failed. Error: %s", err.Error())
-	}
-	<-done
-	logrus.Info("Stopped backend application.")
+	cli.Run()
 }
 
 func loadEnvironment() *config.Environment {
@@ -88,20 +62,4 @@ func loadEnvironment() *config.Environment {
 		log.Fatal("Fail loading environment variables: ", err)
 	}
 	return cfg
-}
-
-func gracefulShutDown(config *config.Environment, quit chan bool, server *http.Server) error {
-	signals := make(chan os.Signal, 1)
-	signal.Notify(signals, os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
-	<-signals
-	ctx, cancel := context.WithTimeout(
-		context.Background(),
-		time.Duration(config.SystemShutdownTimeOutSecond)*time.Second,
-	)
-	defer cancel()
-	if err := server.Shutdown(ctx); err != nil {
-		return err
-	}
-	close(quit)
-	return nil
 }

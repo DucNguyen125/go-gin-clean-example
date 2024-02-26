@@ -1,24 +1,32 @@
 package product
 
 import (
+	"context"
+
 	"base-gin-golang/domain/entity"
 	"base-gin-golang/pkg/logger"
-
-	"github.com/gin-gonic/gin"
 )
 
+type CreateProductInputBody struct {
+	ProductCode string `json:"productCode" validate:"required"`
+	ProductName string `json:"productName" validate:"required"`
+	Price       int    `json:"price"       validate:"required"`
+}
+
 type CreateProductInput struct {
-	ProductCode string `json:"productCode" binding:"required"`
-	ProductName string `json:"productName" binding:"required"`
-	Price       int    `json:"price"       binding:"required"`
+	Body CreateProductInputBody
+}
+
+type CreateProductOutput struct {
+	Body *entity.Product
 }
 
 func (pu *productUseCase) Create(
-	ctx *gin.Context,
+	ctx context.Context,
 	input *CreateProductInput,
-) (*entity.Product, error) {
+) (*CreateProductOutput, error) {
 	data := &entity.Product{}
-	err := pu.dataService.Copy(data, input)
+	err := pu.dataService.Copy(data, &input.Body)
 	if err != nil {
 		logger.LogHandler(ctx, err)
 		return nil, err
@@ -28,5 +36,5 @@ func (pu *productUseCase) Create(
 		logger.LogHandler(ctx, err)
 		return nil, err
 	}
-	return newProduct, nil
+	return &CreateProductOutput{Body: newProduct}, nil
 }

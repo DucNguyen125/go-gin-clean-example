@@ -1,19 +1,16 @@
 package v1
 
 import (
-	"base-gin-golang/handler"
-	errorPkg "base-gin-golang/pkg/errors"
-	"base-gin-golang/usecase/auth"
+	"context"
 
-	"github.com/gin-gonic/gin"
+	"base-gin-golang/handler"
+	routerPkg "base-gin-golang/pkg/router"
+	"base-gin-golang/usecase/auth"
 )
 
-func initAuthRouter(
-	r gin.IRouter,
-	authUseCase auth.UseCase,
-	errorService errorPkg.Service,
-) {
-	r.POST("/login", func(context *gin.Context) {
-		handler.Login(context, authUseCase, errorService)
-	})
+func initAuthRouter(rg *routerPkg.RouterGroup, hdl *handler.Handler) {
+	routerPkg.POST("/login", rg,
+		func(ctx context.Context, input *auth.LoginInput) (*auth.LoginOutput, error) {
+			return hdl.Login(ctx, input)
+		})
 }

@@ -16,6 +16,6 @@ func (le *LogicError) Error() string {
 	return le.Code
 }
 
-func (le *LogicError) GetHTTPCode() int {
+func (le *LogicError) GetStatus() int {
 	return le.HTTPCode
 }

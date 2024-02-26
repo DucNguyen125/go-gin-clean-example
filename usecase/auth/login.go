@@ -1,15 +1,19 @@
 package auth
 
 import (
+	"context"
+
 	jwtPkg "base-gin-golang/pkg/jwt"
 	"base-gin-golang/pkg/logger"
-
-	"github.com/gin-gonic/gin"
 )
 
+type LoginInputBody struct {
+	Email    string `json:"email"    validate:"required,customEmail,email,max=255"`
+	Password string `json:"password" validate:"required"`
+}
+
 type LoginInput struct {
-	Email    string `json:"email"    binding:"required,email,customEmail,max=255"`
-	Password string `json:"password" binding:"required"`
+	Body LoginInputBody
 }
 
 type LoginUser struct {
@@ -18,19 +22,23 @@ type LoginUser struct {
 	Name  string `json:"name"`
 }
 
-type LoginOutput struct {
+type LoginOutputBody struct {
 	User         LoginUser `json:"user"`
 	AccessToken  string    `json:"accessToken"`
 	RefreshToken string    `json:"refreshToken"`
 }
 
-func (au *authUseCase) Login(ctx *gin.Context, input *LoginInput) (*LoginOutput, error) {
-	user, err := au.userRepository.GetByEmail(ctx, input.Email)
+type LoginOutput struct {
+	Body LoginOutputBody
+}
+
+func (au *authUseCase) Login(ctx context.Context, input *LoginInput) (*LoginOutput, error) {
+	user, err := au.userRepository.GetByEmail(ctx, input.Body.Email)
 	if err != nil {
 		logger.LogHandler(ctx, err)
 		return nil, err
 	}
-	err = au.passwordService.CheckHashPassword(user.Password, input.Password)
+	err = au.passwordService.CheckHashPassword(user.Password, input.Body.Password)
 	if err != nil {
 		logger.LogHandler(ctx, err)
 		return nil, err
@@ -52,12 +60,14 @@ func (au *authUseCase) Login(ctx *gin.Context, input *LoginInput) (*LoginOutput,
 		return nil, err
 	}
 	return &LoginOutput{
-		LoginUser{
-			ID:    user.ID,
-			Email: user.Email,
-			Name:  user.Name,
+		Body: LoginOutputBody{
+			LoginUser{
+				ID:    user.ID,
+				Email: user.Email,
+				Name:  user.Name,
+			},
+			accessToken,
+			refreshToken,
 		},
-		accessToken,
-		refreshToken,
 	}, nil
 }

@@ -1,22 +1,22 @@
 package product
 
 import (
+	"context"
 	"errors"
 	"testing"
 
+	"base-gin-golang/config"
 	mockRepository "base-gin-golang/mock/domain/repository"
 	mockPostgreSQL "base-gin-golang/mock/infra/postgresql"
 	mockDataPkg "base-gin-golang/mock/pkg/data"
 
-	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 )
 
 func TestCreate(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-	ctx := &gin.Context{}
-	ctx.Set("processID", "processID")
+	ctx := context.WithValue(context.Background(), config.ContextKeyProcessID, "processID")
 	mockDB, errConnect := mockPostgreSQL.ConnectPostgresql()
 	if errConnect != nil {
 		t.Errorf("connect db fail")

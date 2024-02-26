@@ -1,26 +1,28 @@
 package product
 
 import (
+	"context"
+
+	"base-gin-golang/config"
 	"base-gin-golang/domain/entity"
 	"base-gin-golang/pkg/logger"
 
-	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
 func (pu *productUseCase) CreateWithTransaction(
-	ctx *gin.Context,
+	ctx context.Context,
 	input *CreateProductInput,
-) (*entity.Product, error) {
+) (*CreateProductOutput, error) {
 	data := &entity.Product{}
-	err := pu.dataService.Copy(data, input)
+	err := pu.dataService.Copy(data, &input.Body)
 	if err != nil {
 		logger.LogHandler(ctx, err)
 		return nil, err
 	}
 	var newProduct *entity.Product
 	err = pu.database.Transaction(func(tx *gorm.DB) error {
-		ctx.Set("tx", tx)
+		ctx = context.WithValue(ctx, config.ContextKeyTransaction, tx)
 		newProduct, err = pu.productRepository.Create(ctx, data)
 		return err
 	})
@@ -28,5 +30,5 @@ func (pu *productUseCase) CreateWithTransaction(
 		logger.LogHandler(ctx, err)
 		return nil, err
 	}
-	return newProduct, nil
+	return &CreateProductOutput{Body: newProduct}, nil
 }

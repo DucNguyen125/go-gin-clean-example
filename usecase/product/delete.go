@@ -1,32 +1,39 @@
 package product
 
 import (
-	"base-gin-golang/pkg/logger"
+	"context"
 
-	"github.com/gin-gonic/gin"
+	"base-gin-golang/pkg/logger"
 )
 
 type DeleteProductInput struct {
-	ID int64
+	ID int64 `path:"id"`
 }
 
-type DeleteProductOutPut struct {
+type DeleteProductOutputBody struct {
 	RowsAffected int64 `json:"rowsAffected"`
 }
 
+type DeleteProductOutput struct {
+	Body DeleteProductOutputBody
+}
+
 func (pu *productUseCase) Delete(
-	ctx *gin.Context,
+	ctx context.Context,
 	input *DeleteProductInput,
-) (*DeleteProductOutPut, error) {
+) (*DeleteProductOutput, error) {
 	rowsAffected, err := pu.productRepository.Delete(ctx, input.ID)
 	if err != nil {
 		logger.LogHandler(ctx, err)
-		return &DeleteProductOutPut{
-			RowsAffected: 0,
+		return &DeleteProductOutput{
+			Body: DeleteProductOutputBody{
+				RowsAffected: 0,
+			},
 		}, err
 	}
-	output := &DeleteProductOutPut{
-		RowsAffected: rowsAffected,
-	}
-	return output, nil
+	return &DeleteProductOutput{
+		Body: DeleteProductOutputBody{
+			RowsAffected: rowsAffected,
+		},
+	}, nil
 }

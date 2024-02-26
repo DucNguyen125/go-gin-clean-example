@@ -1,16 +1,16 @@
 package auth
 
 import (
+	"context"
+
 	"base-gin-golang/config"
 	"base-gin-golang/domain/repository"
 	jwtPkg "base-gin-golang/pkg/jwt"
 	passwordPkg "base-gin-golang/pkg/password"
-
-	"github.com/gin-gonic/gin"
 )
 
 type UseCase interface {
-	Login(ctx *gin.Context, input *LoginInput) (*LoginOutput, error)
+	Login(ctx context.Context, input *LoginInput) (*LoginOutput, error)
 }
 
 type authUseCase struct {
