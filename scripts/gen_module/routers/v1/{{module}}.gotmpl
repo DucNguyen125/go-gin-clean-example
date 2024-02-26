@@ -1,31 +1,32 @@
 package v1
 
 import (
-	"base-gin-golang/handler"
-	errorPkg "base-gin-golang/pkg/errors"
-	"base-gin-golang/usecase/{{module_snake}}"
+	"context"
 
-	"github.com/gin-gonic/gin"
+	"base-gin-golang/handler"
+	routerPkg "base-gin-golang/pkg/router"
+	"base-gin-golang/usecase/{{module_snake}}"
 )
 
-func init{{Module}}Router(
-	r gin.IRouter,
-	{{module}}UseCase {{module}}.UseCase,
-	errorService errorPkg.Service,
-) {
-	r.POST("", func(ctx *gin.Context) {
-		handler.Create{{Module}}(ctx, {{module}}UseCase, errorService)
-	})
-	r.GET("", func(ctx *gin.Context) {
-		handler.GetList{{Module}}(ctx, {{module}}UseCase, errorService)
-	})
-	r.GET("/:id", func(ctx *gin.Context) {
-		handler.Get{{Module}}(ctx, {{module}}UseCase, errorService)
-	})
-	r.PUT("/:id", func(ctx *gin.Context) {
-		handler.Update{{Module}}(ctx, {{module}}UseCase, errorService)
-	})
-	r.DELETE("/:id", func(ctx *gin.Context) {
-		handler.Delete{{Module}}(ctx, {{module}}UseCase, errorService)
-	})
+func init{{Module}}Router(rg *routerPkg.RouterGroup, hdl *handler.Handler) {
+	routerPkg.POST("", rg,
+		func(ctx context.Context, input *{{module}}.Create{{Module}}Input) (*{{module}}.Create{{Module}}Output, error) {
+			return hdl.Create{{Module}}(ctx, input)
+		})
+	routerPkg.GET("", rg,
+		func(ctx context.Context, input *{{module}}.GetList{{Module}}Input) (*{{module}}.GetList{{Module}}Output, error) {
+			return hdl.GetList{{Module}}(ctx, input)
+		})
+	routerPkg.GET("/{id}", rg,
+		func(ctx context.Context, input *{{module}}.Get{{Module}}ByIDInput) (*{{module}}.Get{{Module}}ByIDOutput, error) {
+			return hdl.Get{{Module}}(ctx, input)
+		})
+	routerPkg.PUT("/{id}", rg,
+		func(ctx context.Context, input *{{module}}.Update{{Module}}Input) (*{{module}}.Update{{Module}}Output, error) {
+			return hdl.Update{{Module}}(ctx, input)
+		})
+	routerPkg.DELETE("/{id}", rg,
+		func(ctx context.Context, input *{{module}}.Delete{{Module}}Input) (*{{module}}.Delete{{Module}}Output, error) {
+			return hdl.Delete{{Module}}(ctx, input)
+		})
 }

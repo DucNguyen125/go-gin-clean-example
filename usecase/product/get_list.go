@@ -17,11 +17,11 @@ type GetListProductOutput struct {
 	Body []*entity.Product
 }
 
-func (pu *productUseCase) GetList(
+func (u *productUseCase) GetList(
 	ctx context.Context,
 	input *GetListProductInput,
 ) (*GetListProductOutput, error) {
-	products, err := pu.productRepository.GetList(ctx, entity.GetListProductOption{
+	products, err := u.productRepository.GetList(ctx, entity.GetListProductOption{
 		GetListOption: entity.GetListOption{
 			PageIndex: input.PageIndex,
 			PageSize:  input.PageSize,

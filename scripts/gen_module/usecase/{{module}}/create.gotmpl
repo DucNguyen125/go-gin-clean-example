@@ -1,22 +1,30 @@
 package {{module}}
 
 import (
+	"context"
+
 	"base-gin-golang/domain/entity"
 	"base-gin-golang/pkg/logger"
-
-	"github.com/gin-gonic/gin"
 )
 
+type Create{{Module}}InputBody struct {
+	OtherField string `json:"otherField" validate:"required"`
+}
+
 type Create{{Module}}Input struct {
-	OtherField string `json:"otherField" binding:"required"`
+	Body Create{{Module}}InputBody
+}
+
+type Create{{Module}}Output struct {
+	Body *entity.{{Module}}
 }
 
 func (u *{{module}}UseCase) Create(
-	ctx *gin.Context,
+	ctx context.Context,
 	input *Create{{Module}}Input,
-) (*entity.{{Module}}, error) {
+) (*Create{{Module}}Output, error) {
 	data := &entity.{{Module}}{}
-	err := u.dataService.Copy(data, input)
+	err := u.dataService.Copy(data, &input.Body)
 	if err != nil {
 		logger.LogHandler(ctx, err)
 		return nil, err
@@ -26,5 +34,5 @@ func (u *{{module}}UseCase) Create(
 		logger.LogHandler(ctx, err)
 		return nil, err
 	}
-	return new{{Module}}, nil
+	return &Create{{Module}}Output{Body: new{{Module}}}, nil
 }

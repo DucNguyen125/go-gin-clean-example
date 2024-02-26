@@ -21,17 +21,17 @@ type CreateProductOutput struct {
 	Body *entity.Product
 }
 
-func (pu *productUseCase) Create(
+func (u *productUseCase) Create(
 	ctx context.Context,
 	input *CreateProductInput,
 ) (*CreateProductOutput, error) {
 	data := &entity.Product{}
-	err := pu.dataService.Copy(data, &input.Body)
+	err := u.dataService.Copy(data, &input.Body)
 	if err != nil {
 		logger.LogHandler(ctx, err)
 		return nil, err
 	}
-	newProduct, err := pu.productRepository.Create(ctx, data)
+	newProduct, err := u.productRepository.Create(ctx, data)
 	if err != nil {
 		logger.LogHandler(ctx, err)
 		return nil, err

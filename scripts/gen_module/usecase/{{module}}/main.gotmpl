@@ -1,32 +1,35 @@
 package {{module}}
 
 import (
-	"base-gin-golang/domain/entity"
-	"base-gin-golang/domain/repository"
-	dataPkg "base-gin-golang/pkg/data"
+	"context"
 
-	"github.com/gin-gonic/gin"
+	"base-gin-golang/domain/repository"
+	"base-gin-golang/infra/postgresql"
+	dataPkg "base-gin-golang/pkg/data"
 )
 
 type UseCase interface {
-	Create(ctx *gin.Context, input *Create{{Module}}Input) (*entity.{{Module}}, error)
-	Delete(ctx *gin.Context, input *Delete{{Module}}Input) (*Delete{{Module}}OutPut, error)
-	GetByID(ctx *gin.Context, input *Get{{Module}}ByIDInput) (*entity.{{Module}}, error)
-	GetList(ctx *gin.Context, input *GetList{{Module}}Input) ([]*entity.{{Module}}, error)
-	Update(ctx *gin.Context, input *Update{{Module}}Input) (*entity.{{Module}}, error)
+	Create(ctx context.Context, input *Create{{Module}}Input) (*Create{{Module}}Output, error)
+	Delete(ctx context.Context, input *Delete{{Module}}Input) (*Delete{{Module}}Output, error)
+	GetByID(ctx context.Context, input *Get{{Module}}ByIDInput) (*Get{{Module}}ByIDOutput, error)
+	GetList(ctx context.Context, input *GetList{{Module}}Input) (*GetList{{Module}}Output, error)
+	Update(ctx context.Context, input *Update{{Module}}Input) (*Update{{Module}}Output, error)
 }
 
 type {{module}}UseCase struct {
 	{{module}}Repository repository.{{Module}}Repository
-	dataService          dataPkg.Service
+	dataService       dataPkg.Service
+	database          *postgresql.Database
 }
 
 func New{{Module}}UseCase(
 	{{module}}Repository repository.{{Module}}Repository,
 	dataService dataPkg.Service,
+	database *postgresql.Database,
 ) UseCase {
 	return &{{module}}UseCase{
 		{{module}}Repository: {{module}}Repository,
 		dataService:       dataService,
+		database:          database,
 	}
 }

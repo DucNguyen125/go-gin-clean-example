@@ -24,7 +24,7 @@ type UpdateProductOutput struct {
 	Body *entity.Product
 }
 
-func (pu *productUseCase) Update(
+func (u *productUseCase) Update(
 	ctx context.Context,
 	input *UpdateProductInput,
 ) (*UpdateProductOutput, error) {
@@ -34,7 +34,7 @@ func (pu *productUseCase) Update(
 		logger.LogHandler(ctx, err)
 		return nil, err
 	}
-	newProduct, err := pu.productRepository.Update(ctx, input.ID, data)
+	newProduct, err := u.productRepository.Update(ctx, input.ID, data)
 	if err != nil {
 		logger.LogHandler(ctx, err)
 		return nil, err

@@ -18,11 +18,11 @@ type DeleteProductOutput struct {
 	Body DeleteProductOutputBody
 }
 
-func (pu *productUseCase) Delete(
+func (u *productUseCase) Delete(
 	ctx context.Context,
 	input *DeleteProductInput,
 ) (*DeleteProductOutput, error) {
-	rowsAffected, err := pu.productRepository.Delete(ctx, input.ID)
+	rowsAffected, err := u.productRepository.Delete(ctx, input.ID)
 	if err != nil {
 		logger.LogHandler(ctx, err)
 		return &DeleteProductOutput{

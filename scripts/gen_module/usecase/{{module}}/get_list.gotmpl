@@ -1,22 +1,26 @@
 package {{module}}
 
 import (
+	"context"
+
 	"base-gin-golang/domain/entity"
 	"base-gin-golang/pkg/logger"
-
-	"github.com/gin-gonic/gin"
 )
 
 type GetList{{Module}}Input struct {
-	PageIndex int    `form:"pageIndex"`
-	PageSize  int    `form:"pageSize"`
-	Order     string `form:"order"`
+	PageIndex int    `query:"pageIndex"`
+	PageSize  int    `query:"pageSize"`
+	Order     string `query:"order"`
+}
+
+type GetList{{Module}}Output struct {
+	Body []*entity.{{Module}}
 }
 
 func (u *{{module}}UseCase) GetList(
-	ctx *gin.Context,
+	ctx context.Context,
 	input *GetList{{Module}}Input,
-) ([]*entity.{{Module}}, error) {
+) (*GetList{{Module}}Output, error) {
 	{{module}}s, err := u.{{module}}Repository.GetList(ctx, entity.GetList{{Module}}Option{
 		GetListOption: entity.GetListOption{
 			PageIndex: input.PageIndex,
@@ -28,5 +32,5 @@ func (u *{{module}}UseCase) GetList(
 		logger.LogHandler(ctx, err)
 		return nil, err
 	}
-	return {{module}}s, nil
+	return &GetList{{Module}}Output{Body: {{module}}s}, nil
 }

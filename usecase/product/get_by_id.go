@@ -15,11 +15,11 @@ type GetProductByIDOutput struct {
 	Body *entity.Product
 }
 
-func (pu *productUseCase) GetByID(
+func (u *productUseCase) GetByID(
 	ctx context.Context,
 	input *GetProductByIDInput,
 ) (*GetProductByIDOutput, error) {
-	product, err := pu.productRepository.GetByID(ctx, input.ID)
+	product, err := u.productRepository.GetByID(ctx, input.ID)
 	if err != nil {
 		logger.LogHandler(ctx, err)
 		return nil, err

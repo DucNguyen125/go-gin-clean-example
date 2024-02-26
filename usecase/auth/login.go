@@ -32,18 +32,18 @@ type LoginOutput struct {
 	Body LoginOutputBody
 }
 
-func (au *authUseCase) Login(ctx context.Context, input *LoginInput) (*LoginOutput, error) {
-	user, err := au.userRepository.GetByEmail(ctx, input.Body.Email)
+func (u *authUseCase) Login(ctx context.Context, input *LoginInput) (*LoginOutput, error) {
+	user, err := u.userRepository.GetByEmail(ctx, input.Body.Email)
 	if err != nil {
 		logger.LogHandler(ctx, err)
 		return nil, err
 	}
-	err = au.passwordService.CheckHashPassword(user.Password, input.Body.Password)
+	err = u.passwordService.CheckHashPassword(user.Password, input.Body.Password)
 	if err != nil {
 		logger.LogHandler(ctx, err)
 		return nil, err
 	}
-	accessToken, err := au.jwtService.GenerateAccessToken(&jwtPkg.GenerateTokenInput{
+	accessToken, err := u.jwtService.GenerateAccessToken(&jwtPkg.GenerateTokenInput{
 		UserID: user.ID,
 		Email:  user.Email,
 	})
@@ -51,7 +51,7 @@ func (au *authUseCase) Login(ctx context.Context, input *LoginInput) (*LoginOutp
 		logger.LogHandler(ctx, err)
 		return nil, err
 	}
-	refreshToken, err := au.jwtService.GenerateRefreshToken(&jwtPkg.GenerateTokenInput{
+	refreshToken, err := u.jwtService.GenerateRefreshToken(&jwtPkg.GenerateTokenInput{
 		UserID: user.ID,
 		Email:  user.Email,
 	})
