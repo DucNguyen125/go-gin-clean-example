@@ -3,7 +3,7 @@ package product
 import (
 	"context"
 
-	"base-gin-golang/config"
+	"base-gin-golang/constants"
 	"base-gin-golang/domain/entity"
 	"base-gin-golang/pkg/logger"
 
@@ -22,7 +22,7 @@ func (u *productUseCase) CreateWithTransaction(
 	}
 	var newProduct *entity.Product
 	err = u.database.Transaction(func(tx *gorm.DB) error {
-		ctx = context.WithValue(ctx, config.ContextKeyTransaction, tx)
+		ctx = context.WithValue(ctx, constants.ContextKeyTransaction, tx)
 		newProduct, err = u.productRepository.Create(ctx, data)
 		return err
 	})

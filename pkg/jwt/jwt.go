@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"base-gin-golang/config"
-	errorConstants "base-gin-golang/errors"
+	"base-gin-golang/constants"
 
 	"github.com/golang-jwt/jwt"
 )
@@ -83,15 +83,15 @@ func (s *jwtService) ValidateAccessToken(tokenString string) (*CustomJwtClaims, 
 	if err != nil {
 		v, ok := err.(*jwt.ValidationError)
 		if !ok {
-			return nil, errorConstants.ErrTokenInvalid
+			return nil, constants.ErrTokenInvalid
 		}
 		if v.Errors == jwt.ValidationErrorExpired {
-			return nil, errorConstants.ErrTokenExpired
+			return nil, constants.ErrTokenExpired
 		}
-		return nil, errorConstants.ErrTokenInvalid
+		return nil, constants.ErrTokenInvalid
 	}
 	if !token.Valid {
-		return nil, errorConstants.ErrTokenInvalid
+		return nil, constants.ErrTokenInvalid
 	}
 	return claims, nil
 }
@@ -109,15 +109,15 @@ func (s *jwtService) ValidateRefreshToken(tokenString string) (*CustomJwtClaims,
 	if err != nil {
 		v, ok := err.(*jwt.ValidationError)
 		if !ok {
-			return nil, errorConstants.ErrTokenInvalid
+			return nil, constants.ErrTokenInvalid
 		}
 		if v.Errors == jwt.ValidationErrorExpired {
-			return nil, errorConstants.ErrTokenExpired
+			return nil, constants.ErrTokenExpired
 		}
-		return nil, errorConstants.ErrTokenInvalid
+		return nil, constants.ErrTokenInvalid
 	}
 	if !token.Valid {
-		return nil, errorConstants.ErrTokenInvalid
+		return nil, constants.ErrTokenInvalid
 	}
 	return claims, nil
 }

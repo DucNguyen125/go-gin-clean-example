@@ -5,8 +5,8 @@ import (
 	"errors"
 	"time"
 
+	"base-gin-golang/constants"
 	"base-gin-golang/domain/repository"
-	errorConstants "base-gin-golang/errors"
 	redisDb "base-gin-golang/infra/redis"
 
 	redis "github.com/go-redis/redis/v8"
@@ -25,7 +25,7 @@ func NewCacheRepository(db *redisDb.Database) repository.CacheRepository {
 func (r *cacheRepository) Get(ctx context.Context, key string) (string, error) {
 	data, err := r.db.Get(ctx, key).Result()
 	if errors.Is(err, redis.Nil) {
-		return "", errorConstants.ErrKeyDoesNotExist
+		return "", constants.ErrKeyDoesNotExist
 	}
 	if err != nil {
 		return "", err

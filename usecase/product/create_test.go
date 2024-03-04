@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"base-gin-golang/config"
+	"base-gin-golang/constants"
 	mockRepository "base-gin-golang/mock/domain/repository"
 	mockPostgreSQL "base-gin-golang/mock/infra/postgresql"
 	mockDataPkg "base-gin-golang/mock/pkg/data"
@@ -16,7 +16,7 @@ import (
 func TestCreate(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-	ctx := context.WithValue(context.Background(), config.ContextKeyProcessID, "processID")
+	ctx := context.WithValue(context.Background(), constants.ContextKeyProcessID, "processID")
 	mockDB, errConnect := mockPostgreSQL.ConnectPostgresql()
 	if errConnect != nil {
 		t.Errorf("connect db fail")

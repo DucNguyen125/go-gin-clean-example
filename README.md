@@ -1,37 +1,51 @@
+# Feature
+
+See [feature](FEATURE.md)
+
 # Structure
 
 ```
-├── api // OpenAPI/Swagger specs, JSON schema files protocol definition files.
+├── Makefile // Scripts to perform various build, install, analysis, etc operations.
 ├── cmd // Main applications
-├── config // Contain configuration
-│   ├── config.go // environment variables
-│   └── constants.go // constants variables
-├── docker-compose.yml // Container configuration
-├── Dockerfile // Define container image
-├── domain // Domain layer, interface for database layer
+│   ├── main.go
+│   └── wire // auto gen DI
+│       ├── app.go // app interface
+│       ├── wire.go
+│       └── wire_gen.go
+├── config
+│   ├── config.go // require environment variables
+│   └── constants.go // default environment variables
+├── constants // constants variables
+├── domain
 │   ├── entity // model interface
 │   └── repository // repository interface
-├── error // error constants
-├── go.mod
-├── go.sum
 ├── handler // controller, handle request
-├── infra // Database layer
-│   └── postgresql
-│       ├── database.go
-│       ├── logger.go
-│       ├── migrate.go
-│       ├── model // database model
-│       └── repository // database repository
+├── infra
+│   ├── elasticsearch // elasticsearch adapter
+│   ├── mongodb // mongodb adapter
+│   ├── postgresql
+│   │   ├── database.go
+│   │   ├── logger.go
+│   │   ├── migrate.go // atlas adapter
+│   │   ├── migrations // version migrations
+│   │   ├── model // database model
+│   │   └── repository // database repository
+│   ├── redis // redis adapter
+│   └── s3 // aws s3 adapter
 ├── infrastructure_config // Config for docker infra
-├── logs // Contains log file
-├── Makefile // Scripts to perform various build, install, analysis, etc operations.
+├── logs // logs folder
 ├── middlewares // put the before & after logic of handle request
-├── mock // for unit testing
+├── mock // mock for unit testing
 ├── pkg // utils for service
-├── README.md
+│   └── errors
+│       └── custom
+│           ├── internal_server.go // 5xx error
+│           ├── logic.go // logic error
+│           ├── main.go
+│           └── validate.go // validation error
 ├── routers // router for services use REST API
+├── scripts // scripts folder
 ├── template // contain fixed template for email, presentation,...
-├── scripts
 ├── usecase // business logic
 └── validations // custom validation
 ```
@@ -78,12 +92,6 @@ $ make gen_mock usecase=product
 $ make gen_mock service=data
 ```
 
-# Generate Html Swagger Docs
-
-```shell
-$ redoc-cli build api/docs/openapi.yaml
-```
-
 # Migration
 
 ## Re-hash atlas
@@ -91,4 +99,3 @@ $ redoc-cli build api/docs/openapi.yaml
 ```shell
 $ atlas migrate hash --dir file://infra/postgresql/migrations
 ```
-

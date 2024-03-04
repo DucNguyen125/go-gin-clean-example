@@ -12,10 +12,3 @@ type Constants struct {
 	AccessTokenExpireMinute     int  `env:"ACCESS_TOKEN_EXPIRE_MINUTE,default=60"`
 	RefreshTokenExpireHour      int  `env:"REFRESH_TOKEN_EXPIRE_HOUR,default=2"`
 }
-
-type ContextKey string
-
-const (
-	ContextKeyTransaction ContextKey = "tx"
-	ContextKeyProcessID   ContextKey = "processID"
-)
