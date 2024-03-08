@@ -39,8 +39,8 @@ func newApp(
 	// UseCase
 	productUseCase product.UseCase,
 	authUseCase auth.UseCase,
-) App {
-	return App{
+) *App {
+	return &App{
 		// Service
 		DataService:     dataService,
 		StringService:   stringService,

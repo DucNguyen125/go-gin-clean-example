@@ -20,7 +20,7 @@ import (
 	"github.com/google/wire"
 )
 
-func InitApp(config *config.Environment, database *postgresql.Database) (App, error) {
+func InitApp(cfg *config.Environment, database *postgresql.Database) (*App, error) {
 	panic(wire.Build(
 		// Service
 		wire.NewSet(dataPkg.NewDataService),

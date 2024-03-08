@@ -49,7 +49,7 @@ func main() {
 	cli := routers.InitRouter(
 		cfg,
 		middleware,
-		&app,
+		app,
 		vld,
 	)
 	cli.Run()
